@@ -1,0 +1,10 @@
+{
+    "summary": "Installing required libraries and tools for image processing using apt package manager with elevated privileges.",
+    "details": [
+        {
+            "comment": "Installing required libraries and tools for image processing using apt package manager with elevated privileges.",
+            "location": "\"/media/root/Toshiba XG3/works/SingularGPT/docs/src/libs_installation.sh\":0-2",
+            "content": "#!/bin/bash \nsudo apt install scrot xvfb xorg xserver-xorg scrot imagemagick x11-utils xdotool imagemagick"
+        }
+    ]
+}

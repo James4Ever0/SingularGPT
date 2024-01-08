@@ -1,0 +1,15 @@
+{
+    "summary": "The user set up libraries, cloned SingularGPT repository, and initiated process 3 for downloading highlight-pointer. They made it executable, defined a task_3 function, created multiprocessing processes, and wrote a \"prompt\" file with content \"hello click on text Writer Document\".",
+    "details": [
+        {
+            "comment": "Installing necessary libraries and dependencies, setting up a virtual display, cloning SingularGPT repository, and running a process to open LibreOffice.",
+            "location": "\"/media/root/Toshiba XG3/works/SingularGPT/docs/src/SGPT_Quickstart.txt\":0-49",
+            "content": "!pip install python-xlib\n!pip install multiprocessing\n# !pip install xvfbwrapper\n!pip install pyvirtualdisplay\n!pip install pyperclip\n!sudo apt-get install xvfb xorg xserver-xorg scrot imagemagick x11-utils xdotool\n!pip install paddleocr paddlepaddle\nfrom IPython.display import HTML, display\ndef set_css():\n  display(HTML('''\n  <style>\n    pre {\n        white-space: pre-wrap;\n    }\n  </style>\n  '''))\nget_ipython().events.register('pre_run_cell', set_css)\nfrom pyvirtualdisplay import Display\ndisp = Display(size=(1536, 864), color_depth=24)\ndisp.start()\nimport os \nprint(os.environ['DISPLAY'])\n!git clone https://github.com/abhiprojectz/SingularGPT.git\n%cd SingularGPT\n%%bash \nsudo apt update\nsudo apt install tasksel\nsudo add-apt-repository ppa:libreoffice/ppa -y\nsudo apt install libreoffice\nimport multiprocessing\nimport subprocess\nfrom time import sleep\ndef task_3():\n  subprocess.run('sudo libreoffice', shell=True)\n  # subprocess.run('zenity --error --text=\"An error occurjfhgkjfnkjgnred\\!\" --title=\"Warning\\!\"', shell=True)\np3 = multiprocessing.Process(target=task_3)"
+        },
+        {
+            "comment": "Starting process 3, downloading highlight-pointer, making it executable, defining a function for task_3 to run the tool, creating a multiprocessing process for task_3, and writing a file named prompt with content \"hello click on text Writer Document\".",
+            "location": "\"/media/root/Toshiba XG3/works/SingularGPT/docs/src/SGPT_Quickstart.txt\":51-75",
+            "content": "# starting process 3\np3.start()\n!wget https://github.com/swillner/highlight-pointer/releases/download/v1.1.3/highlight-pointer\n!chmod +x highlight-pointer\nimport multiprocessing\nimport subprocess\nfrom time import sleep\ndef task_3():\n  subprocess.run('./highlight-pointer', shell=True)\n  # subprocess.run('zenity --error --text=\"An error occurjfhgkjfnkjgnred\\!\" --title=\"Warning\\!\"', shell=True)\ndef ht_():\n  p3 = multiprocessing.Process(target=task_3)\n  p3.start()\n%%writefile Prompts/prompt\nhello click on text Writer Document\n!python main.py\n!python example_generated_script.py"
+        }
+    ]
+}

@@ -1,0 +1,15 @@
+{
+    "summary": "The code includes a Config class with adjustable threshold values for object recognition, line detection, scaling, text analysis, and UI element classification. It also defines a dictionary named \"COLOR\" that maps different UI components to their respective colors for visual representation in the ZEXUI system.",
+    "details": [
+        {
+            "comment": "The code defines a Config class with adjustable threshold values and a class map. The threshold values are related to object recognition, line detection, composition scaling, text analysis, and UI element classification. These values can be modified for better performance or customization in the ZEXUI system.",
+            "location": "\"/media/root/Toshiba XG3/works/SingularGPT/docs/src/config/CONFIG_ZEXUI.py\":0-21",
+            "content": "class Config:\n    def __init__(self):\n        # Adjustable\n        # self.THRESHOLD_PRE_GRADIENT = 4             # dribbble:4 rico:4 web:1\n        # self.THRESHOLD_OBJ_MIN_AREA = 55            # bottom line 55 of small circle\n        # self.THRESHOLD_BLOCK_GRADIENT = 5\n        self.THRESHOLD_REC_MIN_EVENNESS = 0.7\n        self.THRESHOLD_REC_MAX_DENT_RATIO = 0.25\n        self.THRESHOLD_LINE_THICKNESS = 8\n        self.THRESHOLD_LINE_MIN_LENGTH = 0.95\n        self.THRESHOLD_COMPO_MAX_SCALE = (0.25, 0.98)  \n        self.THRESHOLD_TEXT_MAX_WORD_GAP = 10\n        self.THRESHOLD_TEXT_MAX_HEIGHT = 0.04 \n        self.THRESHOLD_TOP_BOTTOM_BAR = (0.045, 0.94)  \n        self.THRESHOLD_BLOCK_MIN_HEIGHT = 0.03  \n        self.CLASS_MAP = {'0':'Button', '1':'CheckBox', '2':'Chronometer', '3':'EditText', '4':'ImageButton', '5':'ImageView',\n               '6':'ProgressBar', '7':'RadioButton', '8':'RatingBar', '9':'SeekBar', '10':'Spinner', '11':'Switch',\n               '12':'ToggleButton', '13':'VideoView', '14':'TextView'}"
+        },
+        {
+            "comment": "This code defines a dictionary named \"COLOR\" where each key represents a different UI component and its corresponding color value. It maps various user interface elements to their respective colors for visual representation in the application.",
+            "location": "\"/media/root/Toshiba XG3/works/SingularGPT/docs/src/config/CONFIG_ZEXUI.py\":23-35",
+            "content": "        self.COLOR = {'Button': (0, 255, 0), 'CheckBox': (0, 0, 255), 'Chronometer': (255, 166, 166),\n                      'EditText': (255, 166, 0),\n                      'ImageButton': (77, 77, 255), 'ImageView': (255, 0, 166), 'ProgressBar': (166, 0, 255),\n                      'RadioButton': (166, 166, 166),\n                      'RatingBar': (0, 166, 255), 'SeekBar': (0, 166, 10), 'Spinner': (50, 21, 255),\n                      'Switch': (80, 166, 66), 'ToggleButton': (0, 66, 80), 'VideoView': (88, 66, 0),\n                      'TextView': (169, 255, 0),\n                      'Text':(169, 255, 0), 'Non-Text':(255, 0, 166),\n                      'Noise':(6,6,255), 'Non-Noise': (6,255,6),\n                      'Image':(255,6,6), 'Non-Image':(6,6,255)}"
+        }
+    ]
+}

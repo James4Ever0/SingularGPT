@@ -1,0 +1,10 @@
+{
+    "summary": "This code snippet is a request for the user to input their query in a concise manner. It mentions that due to pending document releases, patience is appreciated.",
+    "details": [
+        {
+            "comment": "This code snippet is a request for the user to input their query in a concise manner. It mentions that due to pending document releases, patience is appreciated.",
+            "location": "\"/media/root/Toshiba XG3/works/SingularGPT/docs/src/Prompts/prompts.txt\":0-0",
+            "content": "Put here your query , be as brief as you can, till docs is released be patient please..."
+        }
+    ]
+}

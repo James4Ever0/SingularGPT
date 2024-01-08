@@ -1,0 +1,90 @@
+{
+    "300": {
+        "file_id": 28,
+        "content": "        \"\"\"\n        # Extract all objects and object labels of type element\n        objects, objs = self.get_all_objects(self._type_elm)\n        # Find the target object for which we're searching for the object to the left\n        target_obj = self.cords\n        # Find the object present to the bottom of the target object\n        x = find_obj_to_bottom_of_target_obj(target_obj, objects)\n        # Get the index of the object present to the bottom of the target object\n        x_ind = objects.index(x)\n        # Get the object present to the left of the target object\n        _compo = objs[x_ind]\n        # Update the coordinates of the target object to the bottom object coordinates\n        self.cords = x\n        # Return the object present to the left of the target object\n        return self\n    def findRightOf(self):\n        \"\"\"\n        This function finds the object present to the right of the target object based on\n        the coordinates of the target object `cords` and the list of objects obtained after\n        calling the `get_all_objects` method with `self._type_elm` as argument.",
+        "type": "code",
+        "location": "/zexui_lib/zexui.py:293-319"
+    },
+    "301": {
+        "file_id": 28,
+        "content": "This code snippet retrieves all objects and their labels of type element, then finds the target object based on given coordinates. It determines the object below the target, gets its index, retrieves the object to the left of the target, updates the target's coordinates with the bottom object's, and finally returns the left object. The `findRightOf` function seeks the right object based on the target's coordinates and a list of objects from get_all_objects(self._type_elm).",
+        "type": "comment"
+    },
+    "302": {
+        "file_id": 28,
+        "content": "        It then returns the object present to the right of the target object.\n        Returns:\n        self (object): The object present to the right of the target object returned by this method.\n        \"\"\"\n        # Extract all objects and object labels of type element\n        objects, objs = self.get_all_objects(self._type_elm)\n        # Find the target object for which we're searching for the object to the right\n        target_obj = self.cords\n        # Find the object present to the right of the target object\n        x = find_obj_to_right_of_target_obj(target_obj, objects)\n        # Get the index of the object present to the right of the target object\n        x_ind = objects.index(x)\n        # Get the object present to the right of the target object\n        _compo = objs[x_ind]\n        # Update the coordinates of the target object to the right object coordinates\n        self.cords = x\n        # Return the object present to the right of the target object\n        return self\n    def findTopOf(self):\n        \"\"\"",
+        "type": "code",
+        "location": "/zexui_lib/zexui.py:320-348"
+    },
+    "303": {
+        "file_id": 28,
+        "content": "The function searches for an object to the right of a specified target object and returns the found object. It uses get_all_objects() to extract objects and their labels, then finds the target object using coordinates. It identifies the object to the right by calling find_obj_to_right_of_target_obj(), retrieves its index, gets the corresponding object from objs list, updates the target object's coordinates with the found object's coordinates, and finally returns the found object.",
+        "type": "comment"
+    },
+    "304": {
+        "file_id": 28,
+        "content": "        This function finds the object present at the top of the target object based on\n        the coordinates of the target object `cords` and the list of objects obtained after\n        calling the `get_all_objects` method with `self._type_elm` as argument.\n        It then returns the object present at the top of the target object.\n        Returns:\n        self (object): The object present at the top of the target object returned by this method.\n        \"\"\"\n        # Extract all objects and object labels of type element\n        objects, objs = self.get_all_objects(self._type_elm)\n        # Find the target object for which we're searching for the object at the top\n        target_obj = self.cords\n        # Find the object present at the top of the target object\n        x = find_obj_to_top_of_target_obj(target_obj, objects)\n        # Get the index of the object present at the top of the target object\n        x_ind = objects.index(x)\n        # Get the object present at the top of the target object\n        _compo = objs[x_ind]",
+        "type": "code",
+        "location": "/zexui_lib/zexui.py:349-370"
+    },
+    "305": {
+        "file_id": 28,
+        "content": "This function finds the object at the top of a target object by extracting all objects and labels, then locates the target object, finds the object on top of it, gets its index, and returns the object.",
+        "type": "comment"
+    },
+    "306": {
+        "file_id": 28,
+        "content": "        # Update the coordinates of the target object to the top object coordinates\n        self.cords = x\n        # Return the object present at the top of the target object\n        return self\n    def findBottomOf(self):\n        \"\"\"\n        This function finds the object present at the bottom of the target object based on\n        the coordinates of the target object `cords` and the list of objects obtained after\n        calling the `get_all_objects` method with `self._type_elm` as argument.\n        It then returns the object present at the bottom of the target object.\n        Returns:\n        self (object): The object present at the bottom of the target object returned by this method.\n        \"\"\"\n        # Extract all objects and object labels of type element\n        objects, objs = self.get_all_objects(self._type_elm)\n        # Find the target object for which we're searching for the object at the bottom\n        target_obj = self.cords\n        # Find the object present at the bottom of the target object",
+        "type": "code",
+        "location": "/zexui_lib/zexui.py:372-395"
+    },
+    "307": {
+        "file_id": 28,
+        "content": "This function updates the coordinates of the target object to the top object's coordinates and returns the object present at the bottom of the target object based on its coordinates and a list of objects.",
+        "type": "comment"
+    },
+    "308": {
+        "file_id": 28,
+        "content": "        x = find_obj_to_bottom_of_target_obj(target_obj, objects)\n        # Get the index of the object present at the bottom of the target object\n        x_ind = objects.index(x)\n        # Get the object present at the bottom of the target object\n        _compo = objs[x_ind]\n        # Update the coordinates of the target object to the bottom object coordinates\n        self.cords = x\n        # Return the object present at the bottom of the target object\n        return self\n  # Todo\n  # def or(self):\n  #   pass \n    def findNearestTo(self):\n        objects, objs = self.get_all_objects(self._type_elm)\n        # Define the list of coordinates\n        coords = objects\n        # Define the target point\n        target_point = self.cords\n        # Calculate the Euclidean distance between the target point and all other points\n        distances = [np.linalg.norm(np.array(coord) - np.array(target_point)) for coord in coords]\n        # Find the index of the nearest point\n        nearest_idx = np.argmin(distances)\n        # Get the nearest point",
+        "type": "code",
+        "location": "/zexui_lib/zexui.py:396-429"
+    },
+    "309": {
+        "file_id": 28,
+        "content": "This code snippet finds the object located at the bottom of another object and updates the coordinates of the target object to match those of the bottom object. It then returns the object found. The code also includes a function for finding the nearest point to the current target point using Euclidean distance, which could be utilized in further functionality.",
+        "type": "comment"
+    },
+    "310": {
+        "file_id": 28,
+        "content": "        nearest_point = coords[nearest_idx]\n        # # Create a white image\n        # img = np.zeros((512, 800, 3), np.uint8)\n        # img.fill(255)\n        # # Draw a red circle around the nearest point\n        # cv2.circle(img, nearest_point, 10, (0, 0, 255), -1)\n        # # Draw green circles around all other points\n        # for coord in coords:\n        #     if coord != nearest_point:\n        #         cv2.circle(img, coord, 10, (0, 255, 0), -1)\n        # Display the image\n        # cv2.imshow('image', img)\n        # Print the coordinates of the nearest point\n        print(\"Nearest point coordinates:\", nearest_point)\n        self.cords = nearest_point\n        return self\n    def write(self, text):\n        delay = True\n        write(text, delay)\n    def click(self):\n        \"\"\"\n        This function gets the x and y coordinates of the target object `cords` and calls the `click_one` function\n        by passing the x and y coordinates as arguments.\n        \"\"\"\n        # Get the x and y coordinates of the target object",
+        "type": "code",
+        "location": "/zexui_lib/zexui.py:430-463"
+    },
+    "311": {
+        "file_id": 28,
+        "content": "This code is creating a white image, drawing red circles around the nearest point and green circles around other points, displaying the image, and printing the coordinates of the nearest point. It also provides methods for writing text with delay and clicking on target objects using their coordinates.",
+        "type": "comment"
+    },
+    "312": {
+        "file_id": 28,
+        "content": "        x = self.cords[0]\n        y = self.cords[1]\n        sleep(1)\n        # Print the x and y coordinates of the target object\n        print(x, y)\n        # Call the `click_one` function by passing the x and y coordinates as arguments\n        click_one(x, y)\n    def mouseMoveTo(self, x, y):\n        \"\"\"\n        This function moves the mouse cursor to the provided x and y coordinates.\n        Parameters:\n        x (int): The x-coordinate to which the mouse cursor has to be moved.\n        y (int): The y-coordinate to which the mouse cursor has to be moved.\n        \"\"\"\n        # Move the mouse cursor to the provided x and y coordinates\n        mouse_move(x, y)\n    def mouseMove(self):\n        \"\"\"\n        This function moves the mouse cursor to the x and y coordinates of the target object.\n        Parameters:\n        None\n        Returns:\n        None\n        \"\"\"\n        # Get the x and y coordinates of the target object\n        x, y = self.cords[0], self.cords[1]\n        # Move the mouse cursor to the x and y coordinates of the target object",
+        "type": "code",
+        "location": "/zexui_lib/zexui.py:464-500"
+    },
+    "313": {
+        "file_id": 28,
+        "content": "The code contains two functions, `mouseMoveTo` and `mouseMove`. The `mouseMoveTo` function takes in x and y coordinates as parameters and moves the mouse cursor to that specified location. The `mouseMove` function finds the x and y coordinates of a target object (presumably using `self.cords`) and moves the mouse cursor to those coordinates without any additional parameters.",
+        "type": "comment"
+    },
+    "314": {
+        "file_id": 28,
+        "content": "        mouse_move(x, y)\n    def wait(self, x):\n        wait(x)\n    def scroll_up(self, x):\n        scroll_up(x)\n    def scroll_down(self, x):\n        scroll_down(x)\n    def scroll_left(self, x):\n        scroll_left(self, x)\n    def scroll_right(self, x):\n        scroll_right(self, x)\n    def mouseToggleUp(self):\n        # Get the x and y coordinates of the target object\n        x, y = self.cords[0], self.cords[1]\n        mouseToggleUp(x, y)\n    def mouseToggleDown(self):\n        # Get the x and y coordinates of the target object\n        x, y = self.cords[0], self.cords[1]\n        mouseToggleDown(x, y)",
+        "type": "code",
+        "location": "/zexui_lib/zexui.py:501-526"
+    },
+    "315": {
+        "file_id": 28,
+        "content": "The code snippet defines various mouse and scroll functions, including move, wait, up/down scrolling in all directions. The mouseToggleUp and mouseToggleDown functions obtain the target object's coordinates and call respective functions with those coordinates.",
+        "type": "comment"
+    }
+}

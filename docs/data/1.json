@@ -1,0 +1,544 @@
+{
+    "100": {
+        "file_id": 12,
+        "content": "import cv2\nimport numpy as np\nimport component_detection.lib_ip.ip_draw as draw\nimport component_detection.lib_ip.ip_preprocessing as pre\nfrom component_detection.lib_ip.Component import Component\nimport component_detection.lib_ip.Component as Compo\nfrom config.CONFIG_ZEXUI import Config\nC = Config()\ndef merge_intersected_corner(compos, org, is_merge_contained_ele, max_gap=(0, 0), max_ele_height=25):\n    '''\n    Merge compos that intersect or are close to each other into one component.\n    :param compos: list of Component objects\n    :param org: original image\n    :param is_merge_contained_ele: if True, merge compos nested in others\n    :param max_gap: (horizontal_distance, vertical_distance) to be merge into one line/column\n    :param max_ele_height: if higher than it, recognize the compo as text\n    :return: list of Component objects\n    '''\n    # Check if any compos have been merged\n    changed = False\n    # Create a new list for merged compos\n    new_compos = []\n    # Update the dimensions of each compo\n    Compo.compos_update(compos, org.shape)",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:1-28"
+    },
+    "101": {
+        "file_id": 12,
+        "content": "This function merges intersecting or close components into one by checking if any compos have been merged and updating the dimensions of each compo. It takes a list of Component objects, original image, is_merge_contained_ele parameter, max_gap distance, and max_ele_height as parameters and returns a new list of Component objects.",
+        "type": "comment"
+    },
+    "102": {
+        "file_id": 12,
+        "content": "    # Loop through each compo\n    for i in range(len(compos)):\n        merged = False\n        cur_compo = compos[i]\n        # Loop through each merged compo\n        for j in range(len(new_compos)):\n            # Get the relation between compo[i] and compo[j]\n            relation = cur_compo.compo_relation(new_compos[j], max_gap)\n            # Merge compo[i] to compo[j] if:\n            # 1. compo[j] contains compo[i]\n            # 2. compo[j] intersects with compo[i] with certain intersection over union (iou)\n            # 3. is_merge_contained_ele is True and compo[j] is contained in compo[i]\n            if relation == 1 or relation == 2 or (is_merge_contained_ele and relation == -1):\n                new_compos[j].compo_merge(cur_compo)\n                cur_compo = new_compos[j]\n                merged = True\n                changed = True\n        # Append the unmerged compo to new_compos\n        if not merged:\n            new_compos.append(compos[i])\n    # If no compos have been merged, return the original list of compos",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:30-53"
+    },
+    "103": {
+        "file_id": 12,
+        "content": "The code iterates through compos and new_compos, checking their relations and merging or appending them based on certain conditions. If a compo is merged, the change is noted. The function returns the updated list of new_compos if any were merged, otherwise it returns the original list of compos.",
+        "type": "comment"
+    },
+    "104": {
+        "file_id": 12,
+        "content": "    if not changed:\n        return compos\n    # Otherwise, call the function recursively on the new_compos list until no more compos can be merged\n    else:\n        return merge_intersected_corner(new_compos, org, is_merge_contained_ele, max_gap, max_ele_height)\ndef merge_intersected_compos(compos):\n    '''\n    Merge intersected components in a list of components.\n    :param compos: a list of Component objects\n    :return: a new list of Component objects\n    '''\n    changed = True\n    while changed:\n        changed = False\n        temp_set = []\n        for compo_a in compos:\n            merged = False\n            for compo_b in temp_set:\n                if compo_a.compo_relation(compo_b) == 2:\n                    compo_b.compo_merge(compo_a)\n                    merged = True\n                    changed = True\n                    break\n            if not merged:\n                temp_set.append(compo_a)\n        compos = temp_set.copy()\n    return compos\ndef compo_relation(compo_a, compo_b):\n    '''\n    Check the relation between two components.",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:54-87"
+    },
+    "105": {
+        "file_id": 12,
+        "content": "This code contains a function that merges intersected components in a list of components. It repeatedly checks for intersections between each component and those already merged, marking them as \"merged\" if found. The process continues until no more merging can be performed.",
+        "type": "comment"
+    },
+    "106": {
+        "file_id": 12,
+        "content": "    :param compo_a: a Component object\n    :param compo_b: a Component object\n    :return: an integer indicating the relation: 0 for no intersection, 1 for compo_b contains compo_a,\n             2 for compo_a intersects compo_b, and -1 for compo_a contains compo_b\n    '''\n    relation = 0\n    if compo_b.contains(compo_a):\n        relation = 1\n    elif compo_a.intersects(compo_b):\n        iou = compo_a.intersection_over_union(compo_b)\n        if iou >= 0.5:\n            relation = 2\n    elif compo_a.contains(compo_b):\n        relation = -1\n    return relation\ndef contains(compo_a, compo_b):\n    '''\n    Check if a component contains another component.\n    :param compo_a: a Component object\n    :param compo_b: a Component object\n    :return: a boolean indicating if compo_a contains compo_b\n    '''\n    return compo_a.bounding_box.contains(compo_b.bounding_box)\ndef intersects(compo_a, compo_b):\n    '''\n    Check if a component intersects another component.\n    :param compo_a: a Component object\n    :param compo_b: a Component object",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:89-120"
+    },
+    "107": {
+        "file_id": 12,
+        "content": "The function detects the relation between two components, whether one contains or intersects the other. It also checks if a component contains another or intersects with it. The code includes functions to determine if one component contains or intersects with another by checking their bounding boxes.",
+        "type": "comment"
+    },
+    "108": {
+        "file_id": 12,
+        "content": "    :return: a boolean indicating if compo_a intersects compo_b\n    '''\n    return compo_a.bounding_box.intersects(compo_b.bounding_box)\ndef intersection_over_union(compo_a, compo_b):\n    '''\n    Calculate the intersection over union (IOU) between two components.\n    :param compo_a: a Component object\n    :param compo_b: a Component object\n    :return: a float representing the IOU between compo_a and compo_b\n    '''\n    intersection = compo_a.bounding_box.intersection(compo_b.bounding_box)\n    union = compo_a.bounding_box.union(compo_b.bounding_box)\n    iou = intersection.area / union.area\n    return iou\ndef compo_merge(compo_a, compo_b):\n    '''\n    Merge two components.\n    :param compo_a: a Component object\n    :param compo_b: a Component object\n    :return: None\n    '''\n    new_bbox = compo_a.bounding_box.union(compo_b.bounding_box)\n    new_compo = Component(new_bbox)\n    new_compo.children = compo_a.children + compo_b.children\n    compo_a.children = []\n    compo_b.children = []\n    return new_compo\ndef remove_contained_non_block_components(compos):",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:121-154"
+    },
+    "109": {
+        "file_id": 12,
+        "content": "The code contains several functions for component detection and manipulation. The `intersection_over_union` function calculates the intersection over union between two components, while `compo_merge` merges two components into one by combining their bounding boxes and children. The `remove_contained_non_block_components` function removes non-block contained components from a list of components.",
+        "type": "comment"
+    },
+    "110": {
+        "file_id": 12,
+        "content": "    '''\n    Remove components that are contained by others and not of 'Block' category\n    '''\n    marked = np.full(len(compos), False)\n    mark_contained_non_block_components(compos, marked)\n    return get_unmarked_components(compos, marked)\ndef mark_contained_non_block_components(compos, marked):\n    '''\n    Mark contained non-block components\n    '''\n    for i in range(len(compos) - 1):\n        for j in range(i + 1, len(compos)):\n            relation = compos[i].compo_relation(compos[j])\n            if relation == -1 and compos[j].category != 'Block':\n                marked[i] = True\n            if relation == 1 and compos[i].category != 'Block':\n                marked[j] = True\ndef get_unmarked_components(compos, marked):\n    '''\n    Get unmarked components\n    '''\n    new_compos = []\n    for i in range(len(marked)):\n        if not marked[i]:\n            new_compos.append(compos[i])\n    return new_compos\ndef merge_text(compos, org_shape, max_word_gad=4, max_word_height=20):\n    def is_text(compo):\n        \"\"\"\n        Check if the component is text based on its height and category.",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:155-190"
+    },
+    "111": {
+        "file_id": 12,
+        "content": "This code removes contained non-block components, gets unmarked components, and merges text-based components. It works by iterating over each component in a list, marking those that are contained or not of 'Block' category, then returning only the unmarked components. A separate function is provided to merge text components based on their height and category.",
+        "type": "comment"
+    },
+    "112": {
+        "file_id": 12,
+        "content": "        Args:\n            compo: a component\n        Returns:\n            True if the component is text, False otherwise.\n        \"\"\"\n        height = compo.height\n        # ignore non-text\n        # if height / row > max_word_height_ratio\\\n        #         or compos[i].category != 'Text':\n        if height > max_word_height:\n            return False\n        else:\n            return True\n    def is_same_line(compo_a, compo_b):\n        \"\"\"\n        Check if two components are on the same line based on their bounding boxes.\n        Args:\n            compo_a: a component\n            compo_b: a component\n        Returns:\n            True if the two components are on the same line, False otherwise.\n        \"\"\"\n        (col_min_a, row_min_a, col_max_a, row_max_a) = compo_a.put_bbox()\n        (col_min_b, row_min_b, col_max_b, row_max_b) = compo_b.put_bbox()\n        col_min_s = max(col_min_a, col_min_b)\n        col_max_s = min(col_max_a, col_max_b)\n        row_min_s = max(row_min_a, row_min_b)\n        row_max_s = min(row_max_a, row_max_b)",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:192-224"
+    },
+    "113": {
+        "file_id": 12,
+        "content": "The code detects if a component is text based on its height and category. If it's not a text, it returns False. The is_same_line function checks if two components are on the same line by comparing their bounding boxes. It considers the minimum and maximum column and row values of each component to determine if they overlap, indicating they are on the same line.",
+        "type": "comment"
+    },
+    "114": {
+        "file_id": 12,
+        "content": "        # on the same line\n        # if abs(row_min_a - row_min_b) < max_word_gad and abs(row_max_a - row_max_b) < max_word_gad:\n        if row_min_s < row_max_s:\n            # close distance\n            if col_min_s < col_max_s or \\\n                    (0 < col_min_b - col_max_a < max_word_gad) or (0 < col_min_a - col_max_b < max_word_gad):\n                return True\n        return False\n    def merge_components(compo_a, compo_b):\n        \"\"\"\n        Merge two components into a new one.\n        Args:\n            compo_a: a component\n            compo_b: a component\n        Returns:\n            A new component that is the merger of the two input components.\n        \"\"\"\n        new_compo = compo_a.compo_copy()\n        new_compo.compo_merge(compo_b)\n        return new_compo\n    def merge_text_recursive(compos):\n        \"\"\"\n        Recursive function that merges text components until no more mergers can be made.\n        Args:\n            compos: a list of components\n        Returns:\n            A new list of merged components.",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:226-258"
+    },
+    "115": {
+        "file_id": 12,
+        "content": "The code contains a function that checks if two components are close in position and returns True or False accordingly. It also includes a function to merge two components into a new one, which is used in another recursive function that merges text components until no more mergers can be made.",
+        "type": "comment"
+    },
+    "116": {
+        "file_id": 12,
+        "content": "        \"\"\"\n        changed = False\n        new_compos = []\n        for i in range(len(compos)):\n            merged = False\n            if not is_text(compos[i]):\n                new_compos.append(compos[i])\n                continue\n            for j in range(len(new_compos)):\n                if not is_text(new_compos[j]):\n                    continue\n                if is_same_line(compos[i], new_compos[j]):\n                    merged_compo = merge_components(compos[i], new_compos[j])\n                    new_compos[j] = merged_compo\n                    merged = True\n                    changed = True\n                    break\n            if not merged:\n                new_compos.append(compos[i])\n        if not changed:\n            return new_compos\n        else:\n            return merge_text_recursive(new_compos)\n    return merge_text_recursive(compos)\ndef rm_top_or_bottom_corners(components, org_shape, top_bottom_height=C.THRESHOLD_TOP_BOTTOM_BAR):\n    new_compos = []\n    height, width = org_shape[:2]\n    for compo in components:",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:259-291"
+    },
+    "117": {
+        "file_id": 12,
+        "content": "This function takes a list of components and checks if any are text or on the same line. It merges similar components and returns a new list of components, recursively applying this process. If no changes were made, it simply returns the original list. The function also includes code to remove top or bottom corners from the component list based on the specified height threshold.",
+        "type": "comment"
+    },
+    "118": {
+        "file_id": 12,
+        "content": "        (column_min, row_min, column_max, row_max) = compo.put_bbox()\n        # remove big ones\n        # if (row_max - row_min) / height > 0.65 and (column_max - column_min) / width > 0.8:\n        #     continue\n        if not (row_max < height * top_bottom_height[0] or row_min > height * top_bottom_height[1]):\n            new_compos.append(compo)\n    return new_compos\ndef rm_line_v_h(binary, show=False, max_line_thickness=C.THRESHOLD_LINE_THICKNESS):\n    def check_continuous_line(line, edge):\n        continuous_length = 0\n        line_start = -1\n        for j, p in enumerate(line):\n            if p > 0:\n                if line_start == -1:\n                    line_start = j\n                continuous_length += 1\n            elif continuous_length > 0:\n                if continuous_length / edge > 0.6:\n                    return [line_start, j]\n                continuous_length = 0\n                line_start = -1\n        if continuous_length / edge > 0.6:\n            return [line_start, len(line)]\n        else:",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:292-318"
+    },
+    "119": {
+        "file_id": 12,
+        "content": "The function `rm_line_v_h` checks for continuous lines in the binary image. It returns the indices of any line that exceeds a certain length threshold (0.6 times the edge length). The function `put_bbox` of the `compo` object determines the bounding box of a component. Components that are too large are skipped, and the function `check_continuous_line` is used to check for continuous lines in vertical or horizontal directions.",
+        "type": "comment"
+    },
+    "120": {
+        "file_id": 12,
+        "content": "            return None\n    def extract_line_area(line, start_idx, flag='v'):\n        for e, l in enumerate(line):\n            if flag == 'v':\n                map_line[start_idx + e, l[0]:l[1]] = binary[start_idx + e, l[0]:l[1]]\n    map_line = np.zeros(binary.shape[:2], dtype=np.uint8)\n    cv2.imshow('binary', binary)\n    width = binary.shape[1]\n    start_row = -1\n    line_area = []\n    for i, row in enumerate(binary):\n        line_v = check_continuous_line(row, width)\n        if line_v is not None:\n            # new line\n            if start_row == -1:\n                start_row = i\n                line_area = []\n            line_area.append(line_v)\n        else:\n            # checking line\n            if start_row != -1:\n                if i - start_row < max_line_thickness:\n                    # binary[start_row: i] = 0\n                    # map_line[start_row: i] = binary[start_row: i]\n                    print(line_area, start_row, i)\n                    extract_line_area(line_area, start_row)\n                start_row = -1",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:319-348"
+    },
+    "121": {
+        "file_id": 12,
+        "content": "This function iterates through each row of the binary image. If it detects a continuous line, it stores the line area in `line_area`. If it detects another line before the previous one ends (within `max_line_thickness` pixels), it calls `extract_line_area()` to extract and handle the line area. This process continues until all lines are processed or no more lines are detected.",
+        "type": "comment"
+    },
+    "122": {
+        "file_id": 12,
+        "content": "    height = binary.shape[0]\n    start_col = -1\n    for i in range(width):\n        col = binary[:, i]\n        line_h = check_continuous_line(col, height)\n        if line_h is not None:\n            # new line\n            if start_col == -1:\n                start_col = i\n        else:\n            # checking line\n            if start_col != -1:\n                if i - start_col < max_line_thickness:\n                    # binary[:, start_col: i] = 0\n                    map_line[:, start_col: i] = binary[:, start_col: i]\n                start_col = -1\n    binary -= map_line\n    if show:\n        cv2.imshow('no-line', binary)\n        cv2.imshow('lines', map_line)\n        cv2.waitKey()\ndef rm_line(binary,\n            max_line_thickness=C.THRESHOLD_LINE_THICKNESS,\n            min_line_length_ratio=C.THRESHOLD_LINE_MIN_LENGTH,\n            show=False, wait_key=0):\n    def is_valid_line(line):\n        line_length = 0\n        line_gap = 0\n        for j in line:\n            if j > 0:\n                if line_gap > 5:\n                    return False",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:350-385"
+    },
+    "123": {
+        "file_id": 12,
+        "content": "This code detects and removes horizontal lines from an image using binary thresholding. It iterates through each column, identifies continuous lines, and marks them in a separate map. If the line thickness is within the maximum limit, it replaces the binary image's corresponding columns with zeros. Finally, it displays the original image (binary) and the one with removed lines (map_line).",
+        "type": "comment"
+    },
+    "124": {
+        "file_id": 12,
+        "content": "                line_length += 1\n                line_gap = 0\n            elif line_length > 0:\n                line_gap += 1\n        if line_length / width > 0.95:\n            return True\n        return False\n    height, width = binary.shape[:2]\n    board = np.zeros(binary.shape[:2], dtype=np.uint8)\n    start_row, end_row = -1, -1\n    check_line = False\n    check_gap = False\n    for i, row in enumerate(binary):\n        # line_ratio = (sum(row) / 255) / width\n        # if line_ratio > 0.9:\n        if is_valid_line(row):\n            # new start: if it is checking a new line, mark this row as start\n            if not check_line:\n                start_row = i\n                check_line = True\n        else:\n            # end the line\n            if check_line:\n                # thin enough to be a line, then start checking gap\n                if i - start_row < max_line_thickness:\n                    end_row = i\n                    check_gap = True\n                else:\n                    start_row, end_row = -1, -1\n                check_line = False",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:386-417"
+    },
+    "125": {
+        "file_id": 12,
+        "content": "The code detects lines in a binary image and determines if they exceed 0.95 of the image's width to classify as valid lines. It also checks line thickness and gaps between lines. The maximum line thickness is considered, and the code switches between checking lines and gaps within a loop over each row of the binary image. The shape and type of the binary image are assigned to the board array, which is initialized with zeros using numpy's zeros function. Start and end rows for valid lines and potential gaps are tracked, along with boolean flags for line and gap checking states.",
+        "type": "comment"
+    },
+    "126": {
+        "file_id": 12,
+        "content": "        # check gap\n        if check_gap and i - end_row > max_line_thickness:\n            binary[start_row: end_row] = 0\n            start_row, end_row = -1, -1\n            check_line = False\n            check_gap = False\n    if (check_line and (height - start_row) < max_line_thickness) or check_gap:\n        binary[start_row: end_row] = 0\n    if show:\n        cv2.imshow('no-line binary', binary)\n        if wait_key is not None:\n            cv2.waitKey(wait_key)\n        if wait_key == 0:\n            cv2.destroyWindow('no-line binary')\ndef rm_noise_compos(compos):\n    compos_new = []\n    for compo in compos:\n        if compo.category == 'Noise':\n            continue\n        compos_new.append(compo)\n    return compos_new\ndef rm_noise_in_large_img(compos, org,\n                      max_compo_scale=C.THRESHOLD_COMPO_MAX_SCALE):\n    row, column = org.shape[:2]\n    remain = np.full(len(compos), True)\n    new_compos = []\n    for compo in compos:\n        if compo.category == 'Image':\n            for i in compo.contain:\n                remain[i] = False",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:418-453"
+    },
+    "127": {
+        "file_id": 12,
+        "content": "This code is responsible for image processing, specifically removing noise components and creating binary images. It includes functions to remove noise composites, identify and delete noisy regions in large images, and display the resulting binary image. The max_line_thickness and max_compo_scale parameters control the threshold values for line detection and composition removal respectively.",
+        "type": "comment"
+    },
+    "128": {
+        "file_id": 12,
+        "content": "    for i in range(len(remain)):\n        if remain[i]:\n            new_compos.append(compos[i])\n    return new_compos\ndef detect_compos_in_img(compos, binary, org, max_compo_scale=C.THRESHOLD_COMPO_MAX_SCALE, show=False):\n    compos_new = []\n    row, column = binary.shape[:2]\n    for compo in compos:\n        if compo.category == 'Image':\n            compo.compo_update_bbox_area()\n            # org_clip = compo.compo_clipping(org)\n            # bin_clip = pre.binarization(org_clip, show=show)\n            bin_clip = compo.compo_clipping(binary)\n            bin_clip = pre.reverse_binary(bin_clip, show=show)\n            compos_rec, compos_nonrec = component_detection(bin_clip, test=False, step_h=10, step_v=10, rec_detect=True)\n            for compo_rec in compos_rec:\n                compo_rec.compo_relative_position(compo.bbox.col_min, compo.bbox.row_min)\n                if compo_rec.bbox_area / compo.bbox_area < 0.8 and compo_rec.bbox.height > 20 and compo_rec.bbox.width > 20:\n                    compos_new.append(compo_rec)",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:454-475"
+    },
+    "129": {
+        "file_id": 12,
+        "content": "The function `detect_compos_in_img` takes in a list of compositions, a binary image, an organization (org) object, maximum composition scale, and optionally a boolean for showing images. It iterates through each composition and if the category is 'Image', it updates the bounding box area and clips the binary image to the composition's bounding box. It then detects components within the clipped image and appends non-recording component records to the `compos_new` list, if certain conditions are met (bbox area ratio, height, width). Finally, it returns the updated list of compositions.",
+        "type": "comment"
+    },
+    "130": {
+        "file_id": 12,
+        "content": "                    # draw.draw_bounding_box(org, [compo_rec], show=True)\n            # compos_inner = component_detection(bin_clip, rec_detect=False)\n            # for compo_inner in compos_inner:\n            #     compo_inner.compo_relative_position(compo.bbox.col_min, compo.bbox.row_min)\n            #     draw.draw_bounding_box(org, [compo_inner], show=True)\n            #     if compo_inner.bbox_area / compo.bbox_area < 0.8:\n            #         compos_new.append(compo_inner)\n    compos += compos_new\ndef compo_filter(compos, min_area, img_shape):\n    max_height = img_shape[0] * 0.8\n    compos_new = []\n    for compo in compos:\n        if compo.area < min_area:\n            continue\n        if compo.height > max_height:\n            continue\n        ratio_h = compo.width / compo.height\n        ratio_w = compo.height / compo.width\n        if ratio_h > 50 or ratio_w > 40 or \\\n                (min(compo.height, compo.width) < 8 and max(ratio_h, ratio_w) > 10):\n            continue\n        compos_new.append(compo)",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:476-500"
+    },
+    "131": {
+        "file_id": 12,
+        "content": "This code is part of a component detection function in the \"ip_detection.py\" file. It filters out components from a list based on certain criteria such as minimum area, maximum height, aspect ratio, and size. The filtered components are added to a new list called \"compos_new\", which is then appended to the original list.",
+        "type": "comment"
+    },
+    "132": {
+        "file_id": 12,
+        "content": "    return compos_new\ndef is_block(clip, thread=0.15):\n    '''\n    Block is a rectangle border enclosing a group of compos (consider it as a wireframe)\n    Check if a compo is block by checking if the inner side of its border is blank\n    '''\n    side = 4  # scan 4 lines inner forward each border\n    # top border - scan top down\n    blank_count = 0\n    for i in range(1, 5):\n        if sum(clip[side + i]) / 255 > thread * clip.shape[1]:\n            blank_count += 1\n    if blank_count > 2: return False\n    # left border - scan left to right\n    blank_count = 0\n    for i in range(1, 5):\n        if sum(clip[:, side + i]) / 255 > thread * clip.shape[0]:\n            blank_count += 1\n    if blank_count > 2: return False\n    side = -4\n    # bottom border - scan bottom up\n    blank_count = 0\n    for i in range(-1, -5, -1):\n        if sum(clip[side + i]) / 255 > thread * clip.shape[1]:\n            blank_count += 1\n    if blank_count > 2: return False\n    # right border - scan right to left\n    blank_count = 0\n    for i in range(-1, -5, -1):",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:501-532"
+    },
+    "133": {
+        "file_id": 12,
+        "content": "The code checks if a compo is a block by examining the inner sides of its border. It scans four lines inside each border, top down for the top border, left to right for the left border, bottom up for the bottom border, and right to left for the right border. If any of these scans detect more than two blank lines, the compo is not considered a block.",
+        "type": "comment"
+    },
+    "134": {
+        "file_id": 12,
+        "content": "        if sum(clip[:, side + i]) / 255 > thread * clip.shape[0]:\n            blank_count += 1\n    if blank_count > 2: return False\n    return True\ndef compo_block_recognition(binary, compos, block_side_length=0.15):\n    height, width = binary.shape\n    for compo in compos:\n        if compo.height / height > block_side_length and compo.width / width > block_side_length:\n            clip = compo.compo_clipping(binary)\n            if is_block(clip):\n                compo.category = 'Block'\n# take the binary image as input\n# calculate the connected regions -> get the bounding boundaries of them -> check if those regions are rectangles\n# return all boundaries and boundaries of rectangles\ndef component_detection(binary, min_obj_area,\n                        line_thickness=C.THRESHOLD_LINE_THICKNESS,\n                        min_rec_evenness=C.THRESHOLD_REC_MIN_EVENNESS,\n                        max_dent_ratio=C.THRESHOLD_REC_MAX_DENT_RATIO,\n                        step_h = 5, step_v = 2,\n                        rec_detect=False, show=False, test=False):",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:533-556"
+    },
+    "135": {
+        "file_id": 12,
+        "content": "The code performs component detection on a binary image, calculating connected regions and bounding boundaries. It checks if the regions are rectangles to return all boundaries and rectangle boundaries. The function also categorizes components as blocks if they meet certain conditions.",
+        "type": "comment"
+    },
+    "136": {
+        "file_id": 12,
+        "content": "    \"\"\"\n    :param binary: Binary image from pre-processing\n    :param min_obj_area: If not pass then ignore the small object\n    :param min_obj_perimeter: If not pass then ignore the small object\n    :param line_thickness: If not pass then ignore the slim object\n    :param min_rec_evenness: If not pass then this object cannot be rectangular\n    :param max_dent_ratio: If not pass then this object cannot be rectangular\n    :return: boundary: [top, bottom, left, right]\n                        -> up, bottom: list of (column_index, min/max row border)\n                        -> left, right: list of (row_index, min/max column border) detect range of each row\n    \"\"\"\n    mask = np.zeros((binary.shape[0] + 2, binary.shape[1] + 2), dtype=np.uint8)\n    compos_all = []\n    compos_rec = []\n    compos_nonrec = []\n    row, column = binary.shape[0], binary.shape[1]\n    for i in range(0, row, step_h):\n        for j in range(i % 2, column, step_v):\n            if binary[i, j] == 255 and mask[i, j] == 0:\n                # get connected area",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:557-576"
+    },
+    "137": {
+        "file_id": 12,
+        "content": "This function takes binary image, min/max object size and shape parameters, and returns the boundaries of detected components. It initializes a mask for each connected area and iterates through each row and column of the binary image to find non-zero pixels and add them to their respective lists.",
+        "type": "comment"
+    },
+    "138": {
+        "file_id": 12,
+        "content": "                # region = util.boundary_bfs_connected_area(binary, i, j, mask)\n                mask_copy = mask.copy()\n                ff = cv2.floodFill(binary, mask, (j, i), None, 0, 0, cv2.FLOODFILL_MASK_ONLY)\n                if ff[0] < min_obj_area: continue\n                mask_copy = mask - mask_copy\n                region = np.reshape(cv2.findNonZero(mask_copy[1:-1, 1:-1]), (-1, 2))\n                region = [(p[1], p[0]) for p in region]\n                # filter out some compos\n                component = Component(region, binary.shape)\n                # calculate the boundary of the connected area\n                # ignore small area\n                if component.width <= 3 or component.height <= 3:\n                    continue\n                # check if it is line by checking the length of edges\n                # if component.compo_is_line(line_thickness):\n                #     continue\n                if test:\n                    print('Area:%d' % (len(region)))\n                    draw.draw_boundary([component], binary.shape, show=True)",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:577-598"
+    },
+    "139": {
+        "file_id": 12,
+        "content": "This code snippet detects components in an image and filters out small regions. It uses flood filling to create a mask, then reshapes and filters the region to exclude small areas or potential lines. If `test` is set, it prints the area size and displays the boundary of each detected component.",
+        "type": "comment"
+    },
+    "140": {
+        "file_id": 12,
+        "content": "                compos_all.append(component)\n                if rec_detect:\n                    # rectangle check\n                    if component.compo_is_rectangle(min_rec_evenness, max_dent_ratio):\n                        component.rect_ = True\n                        compos_rec.append(component)\n                    else:\n                        component.rect_ = False\n                        compos_nonrec.append(component)\n                if show:\n                    print('Area:%d' % (len(region)))\n                    draw.draw_boundary(compos_all, binary.shape, show=True)\n    # draw.draw_boundary(compos_all, binary.shape, show=True)\n    if rec_detect:\n        return compos_rec, compos_nonrec\n    else:\n        return compos_all\ndef nested_components_detection(grey, org, grad_thresh,\n                   show=False, write_path=None,\n                   step_h=10, step_v=10,\n                   line_thickness=C.THRESHOLD_LINE_THICKNESS,\n                   min_rec_evenness=C.THRESHOLD_REC_MIN_EVENNESS,\n                   max_dent_ratio=C.THRESHOLD_REC_MAX_DENT_RATIO):",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:600-627"
+    },
+    "141": {
+        "file_id": 12,
+        "content": "This code detects and classifies components as either rectangular or non-rectangular based on evenness and dent ratio. It appends these components to separate lists. If \"rec_detect\" is True, it returns the rectangular and non-rectangular components separately; otherwise, it returns all detected components. The function also allows for visualization of component boundaries if \"show\" is set to True.",
+        "type": "comment"
+    },
+    "142": {
+        "file_id": 12,
+        "content": "    '''\n    :param grey: grey-scale of original image\n    :return: corners: list of [(top_left, bottom_right)]\n                        -> top_left: (column_min, row_min)\n                        -> bottom_right: (column_max, row_max)\n    '''\n    compos = []\n    mask = np.zeros((grey.shape[0]+2, grey.shape[1]+2), dtype=np.uint8)\n    broad = np.zeros((grey.shape[0], grey.shape[1], 3), dtype=np.uint8)\n    broad_all = broad.copy()\n    row, column = grey.shape[0], grey.shape[1]\n    for x in range(0, row, step_h):\n        for y in range(0, column, step_v):\n            if mask[x, y] == 0:\n                # region = flood_fill_bfs(grey, x, y, mask)\n                # flood fill algorithm to get background (layout block)\n                mask_copy = mask.copy()\n                ff = cv2.floodFill(grey, mask, (y, x), None, grad_thresh, grad_thresh, cv2.FLOODFILL_MASK_ONLY)\n                # ignore small regions\n                if ff[0] < 500: continue\n                mask_copy = mask - mask_copy\n                region = np.reshape(cv2.findNonZero(mask_copy[1:-1, 1:-1]), (-1, 2))",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:628-651"
+    },
+    "143": {
+        "file_id": 12,
+        "content": "This code uses a flood fill algorithm to detect components in an image. It iterates through the image, ignoring already detected areas and using the flood fill function from cv2 (OpenCV) library. The result is a list of regions of interest, each represented as (top_left, bottom_right) coordinates.",
+        "type": "comment"
+    },
+    "144": {
+        "file_id": 12,
+        "content": "                region = [(p[1], p[0]) for p in region]\n                compo = Component(region, grey.shape)\n                # draw.draw_region(region, broad_all)\n                # if block.height < 40 and block.width < 40:\n                #     continue\n                if compo.height < 30:\n                    continue\n                # print(block.area / (row * column))\n                if compo.area / (row * column) > 0.9:\n                    continue\n                elif compo.area / (row * column) > 0.7:\n                    compo.redundant = True\n                # get the boundary of this region\n                # ignore lines\n                if compo.compo_is_line(line_thickness):\n                    continue\n                # ignore non-rectangle as blocks must be rectangular\n                if not compo.compo_is_rectangle(min_rec_evenness, max_dent_ratio):\n                    continue\n                # if block.height/row < min_block_height_ratio:\n                #     continue\n                compos.append(compo)",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:652-676"
+    },
+    "145": {
+        "file_id": 12,
+        "content": "This code detects and filters components from an image based on size, area, shape, and type. It checks if the component is a line or a rectangle and skips those that do not meet the criteria. The threshold values for area and height are set to continue or skip processing.",
+        "type": "comment"
+    },
+    "146": {
+        "file_id": 12,
+        "content": "                # draw.draw_region(region, broad)\n    if write_path is not None:\n        cv2.imwrite(write_path, broad)\n    return compos",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:677-682"
+    },
+    "147": {
+        "file_id": 12,
+        "content": "This code segment saves the \"broad\" image to a specified path if \"write_path\" is not None, and then returns the \"compos\" image.",
+        "type": "comment"
+    },
+    "148": {
+        "file_id": 13,
+        "content": "/component_detection/lib_ip/ip_draw.py",
+        "type": "filepath"
+    },
+    "149": {
+        "file_id": 13,
+        "content": "The `draw_line()` function is responsible for drawing lines and components' boundaries on an image, while the functions draw_region and draw_region_bin modify a board by coloring or marking specific points within a given region. If show is True, they display the modified board using cv2.imshow.",
+        "type": "summary"
+    },
+    "150": {
+        "file_id": 13,
+        "content": "import cv2\nimport numpy as np\nfrom random import randint as rint\nfrom config.CONFIG_ZEXUI import Config\nC = Config()\ndef draw_bounding_box_class(org, components, color_map=C.COLOR, line=2, show=False, write_path=None, name='board'):\n    \"\"\"\n    Draw bounding box of components with their classes on the original image\n    :param org: original image\n    :param components: bbox [(column_min, row_min, column_max, row_max)]\n                    -> top_left: (column_min, row_min)\n                    -> bottom_right: (column_max, row_max)\n    :param color_map: colors mapping to different components\n    :param line: line thickness\n    :param compo_class: classes matching the corners of components\n    :param show: show or not\n    :return: labeled image\n    \"\"\"\n    board = org.copy()\n    for compo in components:\n        bbox = compo.put_bbox()\n        board = cv2.rectangle(board, (bbox[0], bbox[1]), (bbox[2], bbox[3]), color_map[compo.category], line)\n        # board = cv2.putText(board, compo.category, (bbox[0]+5, bbox[1]+20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color_map[compo.category], 2)",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_draw.py:1-27"
+    },
+    "151": {
+        "file_id": 13,
+        "content": "This function, located at \"SingularGPT/component_detection/lib_ip/ip_draw.py\":0-26, takes an original image (org), components' bounding boxes (bbox), color mapping for different components (color_map), line thickness (line), component class labels (compo_class), and a show or not parameter. It then creates a copy of the original image (board) and draws bounding boxes around each component in the original image, using the provided colors and line thickness. Additionally, it can optionally write the component class labels on top of the corresponding bounding box. Finally, if show is set to True, it will display the labeled image.",
+        "type": "comment"
+    },
+    "152": {
+        "file_id": 13,
+        "content": "    if show:\n        cv2.imshow(name, board)\n        cv2.waitKey(0)\n    if write_path is not None:\n        cv2.imwrite(write_path, board)\n    return board\ndef draw_bounding_box(org, components, color=(0, 255, 0), line=2,\n                      show=False, write_path=None, name='board', is_return=False, wait_key=0):\n    \"\"\"\n    Draw bounding box of components on the original image\n    :param org: original image\n    :param components: bbox [(column_min, row_min, column_max, row_max)]\n                    -> top_left: (column_min, row_min)\n                    -> bottom_right: (column_max, row_max)\n    :param color: line color\n    :param line: line thickness\n    :param show: show or not\n    :return: labeled image\n    \"\"\"\n    if not show and write_path is None and not is_return: return\n    board = org.copy()\n    for compo in components:\n        bbox = compo.put_bbox()\n        board = cv2.rectangle(board, (bbox[0], bbox[1]), (bbox[2], bbox[3]), color, line)\n    if show:\n        cv2.imshow(name, board)\n        if wait_key is not None:",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_draw.py:28-56"
+    },
+    "153": {
+        "file_id": 13,
+        "content": "This code draws bounding boxes on an original image based on given component coordinates. It accepts the original image, component bboxes, color, line thickness, show flag, write path, name for image, is_return flag, and wait key. If the 'show' flag is True, it displays the labeled image with bounding boxes using OpenCV's imshow function. If 'write_path' is not None, it saves the labeled image to the specified file path using imwrite. The function returns the board image which can be useful for further processing if needed.",
+        "type": "comment"
+    },
+    "154": {
+        "file_id": 13,
+        "content": "            cv2.waitKey(wait_key)\n        if wait_key == 0:\n            cv2.destroyWindow(name)\n    if write_path is not None:\n        # board = cv2.resize(board, (1080, 1920))\n        # board = board[100:-110]\n        cv2.imwrite(write_path, board)\n    return board\ndef draw_line(org, lines, color=(0, 255, 0), show=False):\n    \"\"\"\n    Draw detected lines on the original image\n    :param org: original image\n    :param lines: [line_h, line_v]\n            -> line_h: horizontal {'head':(column_min, row), 'end':(column_max, row), 'thickness':int)\n            -> line_v: vertical {'head':(column, row_min), 'end':(column, row_max), 'thickness':int}\n    :param color: drawn color\n    :param show: show or not\n    :return: image with lines drawn\n    \"\"\"\n    board = org.copy()\n    line_h, line_v = lines\n    for line in line_h:\n        cv2.line(board, tuple(line['head']), tuple(line['end']), color, line['thickness'])\n    for line in line_v:\n        cv2.line(board, tuple(line['head']), tuple(line['end']), color, line['thickness'])",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_draw.py:57-83"
+    },
+    "155": {
+        "file_id": 13,
+        "content": "The code snippet is a part of the function `draw_line()` that draws detected lines on the original image. It takes in an original image (`org`), list of lines (`lines`), color for drawing (`color`) and boolean flag (`show`) as inputs, and returns an image with lines drawn. The code iterates over each line in `line_h` and `line_v`, extracting the head and end points of each line. Then, it uses the cv2 library's `cv2.line()` function to draw the lines on a copy of the original image (`board`) with specified color and thickness. If `show` is set to True, the drawn image is displayed using `cv2.waitKey()`. Additionally, there's an optional write path (`write_path`) where the drawn image can be saved as a new file using `cv2.imwrite()`, but only if it is not None.",
+        "type": "comment"
+    },
+    "156": {
+        "file_id": 13,
+        "content": "    if show:\n        cv2.imshow('img', board)\n        cv2.waitKey(0)\n    return board\ndef draw_boundary(components, shape, show=False):\n    \"\"\"\n    Draw boundary of objects on the black withe\n    :param components: boundary: [top, bottom, left, right]\n                        -> up, bottom: (column_index, min/max row border)\n                        -> left, right: (row_index, min/max column border) detect range of each row\n    :param shape: shape or original image\n    :param show: show or not\n    :return: drawn board\n    \"\"\"\n    board = np.zeros(shape[:2], dtype=np.uint8)  # binary board\n    for component in components:\n        # up and bottom: (column_index, min/max row border)\n        for point in component.boundary[0] + component.boundary[1]:\n            board[point[1], point[0]] = 255\n        # left, right: (row_index, min/max column border)\n        for point in component.boundary[2] + component.boundary[3]:\n            board[point[0], point[1]] = 255\n    if show:\n        cv2.imshow('rec', board)\n        cv2.waitKey(0)",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_draw.py:84-110"
+    },
+    "157": {
+        "file_id": 13,
+        "content": "This function takes a set of components and draws their boundaries on an image, returning the resulting board. It also provides the option to display the drawn board using OpenCV functions. The code initializes a binary board of zeros, then iterates through each component's boundary points, setting them to white in the board array. Finally, if 'show' is set to True, it displays the drawn board as an image.",
+        "type": "comment"
+    },
+    "158": {
+        "file_id": 13,
+        "content": "    return board\ndef draw_region(region, broad, show=False):\n    color = (rint(0,255), rint(0,255), rint(0,255))\n    for point in region:\n        broad[point[0], point[1]] = color\n    if show:\n        cv2.imshow('region', broad)\n        cv2.waitKey()\n    return broad\ndef draw_region_bin(region, broad, show=False):\n    for point in region:\n        broad[point[0], point[1]] = 255\n    if show:\n        cv2.imshow('region', broad)\n        cv2.waitKey()\n    return broad",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_draw.py:111-132"
+    },
+    "159": {
+        "file_id": 13,
+        "content": "The code defines two functions: draw_region and draw_region_bin. Both functions take a region, board, and optional show parameter. They modify the board by coloring or marking specific points within the given region. If show is True, they display the modified board with cv2.imshow.",
+        "type": "comment"
+    },
+    "160": {
+        "file_id": 14,
+        "content": "/component_detection/lib_ip/ip_preprocessing.py",
+        "type": "filepath"
+    },
+    "161": {
+        "file_id": 14,
+        "content": "The code is a Python script for image preprocessing, including resizing, grayscaling, median blurring, and gradient map conversion. It also includes functions for filtering, binarization, and display or saving of the processed image with optional parameters.",
+        "type": "summary"
+    },
+    "162": {
+        "file_id": 14,
+        "content": "import cv2\nimport numpy as np\nfrom config.CONFIG_ZEXUI import Config\nC = Config()\ndef read_img(path, resize_height=None, kernel_size=None):\n    def resize_by_height(org):\n        w_h_ratio = org.shape[1] / org.shape[0]\n        resize_w = resize_height * w_h_ratio\n        re = cv2.resize(org, (int(resize_w), int(resize_height)))\n        return re\n    try:\n        img = cv2.imread(path)\n        if kernel_size is not None:\n            img = cv2.medianBlur(img, kernel_size)\n        if img is None:\n            print(\"*** Image does not exist ***\")\n            return None, None\n        if resize_height is not None:\n            img = resize_by_height(img)\n        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)\n        return img, gray\n    except Exception as e:\n        print(e)\n        print(\"*** Img Reading Failed ***\\n\")\n        return None, None\ndef gray_to_gradient(img):\n    if len(img.shape) == 3:\n        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)\n    img_f = np.copy(img)\n    img_f = img_f.astype(\"float\")\n    kernel_h = np.array([[0,0,0], [0,-1.,1.], [0,0,0]])",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_preprocessing.py:1-39"
+    },
+    "163": {
+        "file_id": 14,
+        "content": "The code is a Python script for image preprocessing. It reads an input image, applies resizing and gray-scaling transformations, and can optionally apply median blurring. The function \"gray_to_gradient\" converts grayscale images to gradient maps.",
+        "type": "comment"
+    },
+    "164": {
+        "file_id": 14,
+        "content": "    kernel_v = np.array([[0,0,0], [0,-1.,0], [0,1.,0]])\n    dst1 = abs(cv2.filter2D(img_f, -1, kernel_h))\n    dst2 = abs(cv2.filter2D(img_f, -1, kernel_v))\n    gradient = (dst1 + dst2).astype('uint8')\n    return gradient\ndef reverse_binary(bin, show=False):\n    \"\"\"\n    Reverse the input binary image\n    \"\"\"\n    r, bin = cv2.threshold(bin, 1, 255, cv2.THRESH_BINARY_INV)\n    if show:\n        cv2.imshow('binary_rev', bin)\n        cv2.waitKey()\n    return bin\ndef binarization(org, grad_min, show=False, write_path=None, wait_key=0):\n    grey = cv2.cvtColor(org, cv2.COLOR_BGR2GRAY)\n    grad = gray_to_gradient(grey)        # get RoI with high gradient\n    rec, binary = cv2.threshold(grad, grad_min, 255, cv2.THRESH_BINARY)    # enhance the RoI\n    morph = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, (3, 3))  # remove noises\n    if write_path is not None:\n        cv2.imwrite(write_path, morph)\n    if show:\n        cv2.imshow('binary', morph)\n        if wait_key is not None:\n            cv2.waitKey(wait_key)\n    return morph",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_preprocessing.py:40-69"
+    },
+    "165": {
+        "file_id": 14,
+        "content": "The code consists of three functions: `ip_preprocessing.py` includes a function that performs image filtering and calculates the gradient, another that reverses binary images, and a final one for binarization (converting an image to black and white) based on a given minimum gradient value. The binarized image can be displayed or saved to a specified file path with optional parameters for customization.",
+        "type": "comment"
+    },
+    "166": {
+        "file_id": 15,
+        "content": "/config/CONFIG.py",
+        "type": "filepath"
+    },
+    "167": {
+        "file_id": 15,
+        "content": "This code imports necessary modules and defines platform-specific settings. It supports Linux, Windows, and potentially Android platforms. The OCR component can be Paddle or Google Vision, but the final decision is not yet made in this snippet. There are empty lists for Component Classifications and x11 settings, which may hold additional information.",
+        "type": "summary"
+    },
+    "168": {
+        "file_id": 15,
+        "content": "from os.path import join as pjoin\nimport os\n_PLATFORM = 'windows'\n# _PLATFORM = 'linux'\n# _PLATFORM_ENV = 'COLAB'\n# _PLATFORM_ENV = 'NON_COLAB'\n_OCR = 'paddle' \n# _OCR = 'google-vision'\n# Todo\n_SUPPORTED_PLATFORMS = ['linux', 'windows', 'Android']\n_COMPONENTS_CLASSIFICATIONS = []\n#### x11 settings ###",
+        "type": "code",
+        "location": "/config/CONFIG.py:1-21"
+    },
+    "169": {
+        "file_id": 15,
+        "content": "This code imports necessary modules and defines platform-specific settings. It supports Linux, Windows, and potentially Android platforms. The OCR component can be Paddle or Google Vision, but the final decision is not yet made in this snippet. There are empty lists for Component Classifications and x11 settings, which may hold additional information.",
+        "type": "comment"
+    },
+    "170": {
+        "file_id": 16,
+        "content": "/config/CONFIG_ZEXUI.py",
+        "type": "filepath"
+    },
+    "171": {
+        "file_id": 16,
+        "content": "The code includes a Config class with adjustable threshold values for object recognition, line detection, scaling, text analysis, and UI element classification. It also defines a dictionary named \"COLOR\" that maps different UI components to their respective colors for visual representation in the ZEXUI system.",
+        "type": "summary"
+    },
+    "172": {
+        "file_id": 16,
+        "content": "class Config:\n    def __init__(self):\n        # Adjustable\n        # self.THRESHOLD_PRE_GRADIENT = 4             # dribbble:4 rico:4 web:1\n        # self.THRESHOLD_OBJ_MIN_AREA = 55            # bottom line 55 of small circle\n        # self.THRESHOLD_BLOCK_GRADIENT = 5\n        self.THRESHOLD_REC_MIN_EVENNESS = 0.7\n        self.THRESHOLD_REC_MAX_DENT_RATIO = 0.25\n        self.THRESHOLD_LINE_THICKNESS = 8\n        self.THRESHOLD_LINE_MIN_LENGTH = 0.95\n        self.THRESHOLD_COMPO_MAX_SCALE = (0.25, 0.98)  \n        self.THRESHOLD_TEXT_MAX_WORD_GAP = 10\n        self.THRESHOLD_TEXT_MAX_HEIGHT = 0.04 \n        self.THRESHOLD_TOP_BOTTOM_BAR = (0.045, 0.94)  \n        self.THRESHOLD_BLOCK_MIN_HEIGHT = 0.03  \n        self.CLASS_MAP = {'0':'Button', '1':'CheckBox', '2':'Chronometer', '3':'EditText', '4':'ImageButton', '5':'ImageView',\n               '6':'ProgressBar', '7':'RadioButton', '8':'RatingBar', '9':'SeekBar', '10':'Spinner', '11':'Switch',\n               '12':'ToggleButton', '13':'VideoView', '14':'TextView'}",
+        "type": "code",
+        "location": "/config/CONFIG_ZEXUI.py:1-22"
+    },
+    "173": {
+        "file_id": 16,
+        "content": "The code defines a Config class with adjustable threshold values and a class map. The threshold values are related to object recognition, line detection, composition scaling, text analysis, and UI element classification. These values can be modified for better performance or customization in the ZEXUI system.",
+        "type": "comment"
+    },
+    "174": {
+        "file_id": 16,
+        "content": "        self.COLOR = {'Button': (0, 255, 0), 'CheckBox': (0, 0, 255), 'Chronometer': (255, 166, 166),\n                      'EditText': (255, 166, 0),\n                      'ImageButton': (77, 77, 255), 'ImageView': (255, 0, 166), 'ProgressBar': (166, 0, 255),\n                      'RadioButton': (166, 166, 166),\n                      'RatingBar': (0, 166, 255), 'SeekBar': (0, 166, 10), 'Spinner': (50, 21, 255),\n                      'Switch': (80, 166, 66), 'ToggleButton': (0, 66, 80), 'VideoView': (88, 66, 0),\n                      'TextView': (169, 255, 0),\n                      'Text':(169, 255, 0), 'Non-Text':(255, 0, 166),\n                      'Noise':(6,6,255), 'Non-Noise': (6,255,6),\n                      'Image':(255,6,6), 'Non-Image':(6,6,255)}",
+        "type": "code",
+        "location": "/config/CONFIG_ZEXUI.py:24-36"
+    },
+    "175": {
+        "file_id": 16,
+        "content": "This code defines a dictionary named \"COLOR\" where each key represents a different UI component and its corresponding color value. It maps various user interface elements to their respective colors for visual representation in the application.",
+        "type": "comment"
+    },
+    "176": {
+        "file_id": 17,
+        "content": "/instructions_lib/fetch_commands.py",
+        "type": "filepath"
+    },
+    "177": {
+        "file_id": 17,
+        "content": "This function loads the prompt from a file named \"prompts.txt\" and returns its content as a string. The file is located two folders up, and the function reads it in UTF-8 encoding mode.",
+        "type": "summary"
+    },
+    "178": {
+        "file_id": 17,
+        "content": "# Save your prompts on the main prompts.txt file, try to describe as brief as you can.\ndef load_prompt():\n    with open('../prompts.txt', 'r', encoding='utf-8') as f:\n        data = f.read()\n    return data",
+        "type": "code",
+        "location": "/instructions_lib/fetch_commands.py:1-6"
+    },
+    "179": {
+        "file_id": 17,
+        "content": "This function loads the prompt from a file named \"prompts.txt\" and returns its content as a string. The file is located two folders up, and the function reads it in UTF-8 encoding mode.",
+        "type": "comment"
+    },
+    "180": {
+        "file_id": 18,
+        "content": "/instructions_lib/generate_commands.py",
+        "type": "filepath"
+    },
+    "181": {
+        "file_id": 18,
+        "content": "The code imports necessary libraries, initializes the OpenAI API with an API key, sets the endpoint, and has a `request` method. It defines a function that generates completions for a given prompt using the OpenAI API, checks required parameters, sets request parameters, and prints/returns the response.",
+        "type": "summary"
+    },
+    "182": {
+        "file_id": 18,
+        "content": "import requests\nimport json\nfrom dotenv import load_dotenv\nimport os\nfrom instructions_lib.fetch_commands import load_prompt \nfrom instructions_lib.process_instructions import generate_script, execute_commands \nload_dotenv()\nclass OpenAI_API:\n    def __init__(self, api_key):\n        self.api_key = api_key\n        self.endpoint = 'https://api.openai.com/v1/'\n    def request(self, path, params=None):\n        headers = {\n            'Content-Type': 'application/json',\n            'Authorization': f'Bearer {self.api_key}',\n            'User-Agent': 'OpenAI API Client'\n        }\n        url = self.endpoint + path\n        try:\n            response = requests.post(url, headers=headers, json=params)\n            response.raise_for_status()\n        except requests.exceptions.HTTPError as err:\n            raise Exception(f'Error: {err}')\n        return response.json()\n    def completions(self, prompt, model, temperature=0.5, max_tokens=50):\n        path = 'completions'\n        params = {\n            'model': model,\n            'prompt': prompt,",
+        "type": "code",
+        "location": "/instructions_lib/generate_commands.py:1-37"
+    },
+    "183": {
+        "file_id": 18,
+        "content": "This code imports necessary libraries and defines the `OpenAI_API` class. It initializes an instance of this class with an API key, sets the OpenAI API endpoint, and has a method called `request` for making requests to the OpenAI API. The `completions` method takes a prompt, model, temperature, and maximum number of tokens as parameters and makes a request to the OpenAI API's completions endpoint.",
+        "type": "comment"
+    },
+    "184": {
+        "file_id": 18,
+        "content": "            'temperature': temperature,\n            'max_tokens': max_tokens\n        }\n        return self.request(path, params)\ndef generate(prompt):\n    if prompt:\n        prompt = load_prompt()\n    api_key = os.getenv('OPENAI_API') \n    openai = OpenAI_API(api_key)\n    response = openai.completions(prompt, 'text-davinci-002', temperature=0.7, max_tokens=100)\n    print(response)\n    return response",
+        "type": "code",
+        "location": "/instructions_lib/generate_commands.py:38-51"
+    },
+    "185": {
+        "file_id": 18,
+        "content": "This code defines a function that uses the OpenAI API to generate completions for a given prompt. It first checks if the prompt is provided, then initializes the OpenAI API with an environment variable API key and sets the parameters for the completion request. Finally, it makes the request to the API and prints and returns the response.",
+        "type": "comment"
+    },
+    "186": {
+        "file_id": 19,
+        "content": "/instructions_lib/process_instructions.py",
+        "type": "filepath"
+    },
+    "187": {
+        "file_id": 19,
+        "content": "The code imports necessary modules, defines a Jinja2 template for ZexUI instructions, obtains the current directory and its parent directory's path. It generates a script using the template and writes it to the parent directory's file \"script.py\". The execute_commands function is defined but left empty in this code snippet.",
+        "type": "summary"
+    },
+    "188": {
+        "file_id": 19,
+        "content": "import os\nfrom jinja2 import Template\n# Need to implement a semantic syntax matcher that purifies the GPT generated commands response \n_ZEXUI_INSTRUCTIONS_TEMPLATE = Template(\"\"\"from ZexUI.zexui import ZexUI\nzex = ZexUI()\n{{ _code }}\n\"\"\")\n# current directory\nlocation = os.path.dirname(os.path.realpath(__file__))\n# Get the path of the parent directory (i.e., one level up)\nparent_dir = os.path.abspath(os.path.join(os.getcwd(), os.pardir))\n# Construct the path to the file to be written in the parent directory\nfile_path = os.path.join(parent_dir, 'script.py')\ndef generate_script(_code):\n    print(location)\n    with open(file_path, 'w', encoding='utf-8') as f:\n        _content = _ZEXUI_INSTRUCTIONS_TEMPLATE.render(_code=_code)\n        data = f.write(_content)\n    print(\"[Automation script has been generated.]\")\ndef execute_commands(_code):\n    pass",
+        "type": "code",
+        "location": "/instructions_lib/process_instructions.py:1-30"
+    },
+    "189": {
+        "file_id": 19,
+        "content": "The code imports necessary modules, defines a Jinja2 template for ZexUI instructions, obtains the current directory and its parent directory's path. It generates a script using the template and writes it to the parent directory's file \"script.py\". The execute_commands function is defined but left empty in this code snippet.",
+        "type": "comment"
+    },
+    "190": {
+        "file_id": 20,
+        "content": "/text_detection/Text.py",
+        "type": "filepath"
+    },
+    "191": {
+        "file_id": 20,
+        "content": "The `Text` class represents text elements with properties and methods for justification and merging. The code initializes word width based on content length, detects text location using a binary map, and visualizes the text as a rectangle on an image.",
+        "type": "summary"
+    },
+    "192": {
+        "file_id": 20,
+        "content": "import cv2\nimport numpy as np\nclass Text:\n    def __init__(self, id, content, location):\n        self.id = id\n        self.content = content\n        self.location = location\n        self.width = self.location['right'] - self.location['left']\n        self.height = self.location['bottom'] - self.location['top']\n        self.area = self.width * self.height\n        self.word_width = self.width / len(self.content)\n    '''\n    ********************************\n    *** Relation with Other text ***\n    ********************************\n    '''\n    def is_justified(self, ele_b, direction='h', max_bias_justify=4):\n        '''\n        Check if the element is justified\n        :param max_bias_justify: maximum bias if two elements to be justified\n        :param direction:\n             - 'v': vertical up-down connection\n             - 'h': horizontal left-right connection\n        '''\n        l_a = self.location\n        l_b = ele_b.location\n        # connected vertically - up and below\n        if direction == 'v':\n            # left and right should be justified",
+        "type": "code",
+        "location": "/text_detection/Text.py:1-33"
+    },
+    "193": {
+        "file_id": 20,
+        "content": "The class `Text` represents a text with its id, content, location, width, height, and area. It has a method `is_justified` that checks if an element is justified based on the maximum bias for justification, direction (vertical or horizontal), and location of another element `ele_b`.",
+        "type": "comment"
+    },
+    "194": {
+        "file_id": 20,
+        "content": "            if abs(l_a['left'] - l_b['left']) < max_bias_justify and abs(l_a['right'] - l_b['right']) < max_bias_justify:\n                return True\n            return False\n        elif direction == 'h':\n            # top and bottom should be justified\n            if abs(l_a['top'] - l_b['top']) < max_bias_justify and abs(l_a['bottom'] - l_b['bottom']) < max_bias_justify:\n                return True\n            return False\n    def is_on_same_line(self, text_b, direction='h', bias_gap=4, bias_justify=4):\n        '''\n        Check if the element is on the same row(direction='h') or column(direction='v') with ele_b\n        :param direction:\n             - 'v': vertical up-down connection\n             - 'h': horizontal left-right connection\n        :return:\n        '''\n        l_a = self.location\n        l_b = text_b.location\n        # connected vertically - up and below\n        if direction == 'v':\n            # left and right should be justified\n            if self.is_justified(text_b, direction='v', max_bias_justify=bias_justify):",
+        "type": "code",
+        "location": "/text_detection/Text.py:34-56"
+    },
+    "195": {
+        "file_id": 20,
+        "content": "This code checks if two text elements are on the same row (horizontal) or column (vertical) by comparing their positions and justification. It returns True if they meet the criteria, otherwise False.",
+        "type": "comment"
+    },
+    "196": {
+        "file_id": 20,
+        "content": "                # top and bottom should be connected (small gap)\n                if abs(l_a['bottom'] - l_b['top']) < bias_gap or abs(l_a['top'] - l_b['bottom']) < bias_gap:\n                    return True\n            return False\n        elif direction == 'h':\n            # top and bottom should be justified\n            if self.is_justified(text_b, direction='h', max_bias_justify=bias_justify):\n                # top and bottom should be connected (small gap)\n                if abs(l_a['right'] - l_b['left']) < bias_gap or abs(l_a['left'] - l_b['right']) < bias_gap:\n                    return True\n            return False\n    def is_intersected(self, text_b, bias):\n        l_a = self.location\n        l_b = text_b.location\n        left_in = max(l_a['left'], l_b['left']) + bias\n        top_in = max(l_a['top'], l_b['top']) + bias\n        right_in = min(l_a['right'], l_b['right'])\n        bottom_in = min(l_a['bottom'], l_b['bottom'])\n        w_in = max(0, right_in - left_in)\n        h_in = max(0, bottom_in - top_in)",
+        "type": "code",
+        "location": "/text_detection/Text.py:57-78"
+    },
+    "197": {
+        "file_id": 20,
+        "content": "This code compares the positions of two text boxes, checking for overlap and alignment in both horizontal (h) and vertical (v) directions. If there is an overlap or proper justification in either direction, it returns True; otherwise, False. The is_intersected function uses these checks to determine if two text boxes intersect or not.",
+        "type": "comment"
+    },
+    "198": {
+        "file_id": 20,
+        "content": "        area_in = w_in * h_in\n        if area_in > 0:\n            return True\n    '''\n    ***********************\n    *** Revise the Text ***\n    ***********************\n    '''\n    def merge_text(self, text_b):\n        text_a = self\n        top = min(text_a.location['top'], text_b.location['top'])\n        left = min(text_a.location['left'], text_b.location['left'])\n        right = max(text_a.location['right'], text_b.location['right'])\n        bottom = max(text_a.location['bottom'], text_b.location['bottom'])\n        self.location = {'left': left, 'top': top, 'right': right, 'bottom': bottom}\n        self.width = self.location['right'] - self.location['left']\n        self.height = self.location['bottom'] - self.location['top']\n        self.area = self.width * self.height\n        left_element = text_a\n        right_element = text_b\n        if text_a.location['left'] > text_b.location['left']:\n            left_element = text_b\n            right_element = text_a\n        self.content = left_element.content + ' ' + right_element.content",
+        "type": "code",
+        "location": "/text_detection/Text.py:79-104"
+    },
+    "199": {
+        "file_id": 20,
+        "content": "This code defines a method `merge_text` that takes another `Text` object, compares their positions, and merges them into one by updating the location, width, height, and area attributes. The method also combines the contents of both texts into a single string.",
+        "type": "comment"
+    }
+}

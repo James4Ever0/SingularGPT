@@ -1,0 +1,10 @@
+{
+    "summary": "This code imports necessary modules and defines platform-specific settings. It supports Linux, Windows, and potentially Android platforms. The OCR component can be Paddle or Google Vision, but the final decision is not yet made in this snippet. There are empty lists for Component Classifications and x11 settings, which may hold additional information.",
+    "details": [
+        {
+            "comment": "This code imports necessary modules and defines platform-specific settings. It supports Linux, Windows, and potentially Android platforms. The OCR component can be Paddle or Google Vision, but the final decision is not yet made in this snippet. There are empty lists for Component Classifications and x11 settings, which may hold additional information.",
+            "location": "\"/media/root/Toshiba XG3/works/SingularGPT/docs/src/config/CONFIG.py\":0-20",
+            "content": "from os.path import join as pjoin\nimport os\n_PLATFORM = 'windows'\n# _PLATFORM = 'linux'\n# _PLATFORM_ENV = 'COLAB'\n# _PLATFORM_ENV = 'NON_COLAB'\n_OCR = 'paddle' \n# _OCR = 'google-vision'\n# Todo\n_SUPPORTED_PLATFORMS = ['linux', 'windows', 'Android']\n_COMPONENTS_CLASSIFICATIONS = []\n#### x11 settings ###"
+        }
+    ]
+}

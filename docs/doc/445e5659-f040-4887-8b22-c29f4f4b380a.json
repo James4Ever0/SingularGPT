@@ -1,0 +1,10 @@
+{
+    "summary": "The code represents a list of dependencies for a Python project. These include: PaddleOCR for optical character recognition, OpenCV for image processing, Google Cloud Vision API client, NumPy for numerical computations, Matplotlib for data visualization, Xlib for interface with the X Window System, and PyVirtualDisplay for running virtual displays.",
+    "details": [
+        {
+            "comment": "The code represents a list of dependencies for a Python project. These include: PaddleOCR for optical character recognition, OpenCV for image processing, Google Cloud Vision API client, NumPy for numerical computations, Matplotlib for data visualization, Xlib for interface with the X Window System, and PyVirtualDisplay for running virtual displays.",
+            "location": "\"/media/root/Toshiba XG3/works/SingularGPT/docs/src/requirements.txt\":0-6",
+            "content": "paddleocr\nopencv-python-headless\ngoogle-cloud-vision\nnumpy\nmatplotlib\npython-xlib\npyvirtualdisplay"
+        }
+    ]
+}

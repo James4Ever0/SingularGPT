@@ -1,0 +1,10 @@
+{
+    "summary": "The code imports functions from two different libraries, generates commands based on a prompt, generates a script from those commands, and then runs the script using subprocess. It also has an unused execute_commands function call at the end.",
+    "details": [
+        {
+            "comment": "The code imports functions from two different libraries, generates commands based on a prompt, generates a script from those commands, and then runs the script using subprocess. It also has an unused execute_commands function call at the end.",
+            "location": "\"/media/root/Toshiba XG3/works/SingularGPT/docs/src/main.py\":0-13",
+            "content": "from instructions_lib.generate_commands import generate, execute_commands\nfrom instructions_lib.process_instructions import generate_script, execute_commands \nimport subprocess \n_prompt = 'Query: click on the item with text \"Document Writer\" after that click on the image with path \"image.png\" after that scroll down and then find element that is top of text \"File\" , double left click it.'\ncommands = generate(_prompt)\ngenerate_script(commands)\nsubprocess.run('python script.py', shell=True)\n# execute_commands(commands)"
+        }
+    ]
+}

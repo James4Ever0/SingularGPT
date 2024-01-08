@@ -1,0 +1,10 @@
+{
+    "summary": "The code sets up an X11 screen buffer using pyvirtualdisplay, starts the display at a specified size and color depth, and then changes the window dimensions. It uses subprocess to run commands in the shell environment, such as setting the DISPLAY environment variable and moving the window to coordinates (0, 0). The code is written in Python and intended for use on an x11 server.",
+    "details": [
+        {
+            "comment": "The code sets up an X11 screen buffer using pyvirtualdisplay, starts the display at a specified size and color depth, and then changes the window dimensions. It uses subprocess to run commands in the shell environment, such as setting the DISPLAY environment variable and moving the window to coordinates (0, 0). The code is written in Python and intended for use on an x11 server.",
+            "location": "\"/media/root/Toshiba XG3/works/SingularGPT/docs/src/x11_server/start.py\":0-27",
+            "content": "import subprocess\nfrom time import sleep\nimport re\nfrom pyvirtualdisplay import Display\nimport os \ndef start():\n    disp = Display(size=(1536, 864), color_depth=24)\n    disp.start()\n    print(os.environ['DISPLAY'])\n    subprocess.run(f\"export DISPLAY={os.environ['DISPLAY']}\", shell=True)\n    sleep(3)\n    # subprocess.run(\"sudo google-chrome --window-size=1536,864 --no-sandbox https://google.com &\", shell=True)\n    # Changing window dimensions\n    window = subprocess.check_output(\"xdotool getmouselocation\", shell=True)\n    win__ = int(re.search(r'\\d+', str(window).split(\" \")[-1].strip()).group()) \n    print(win__)\n    subprocess.run(f\"xdotool windowmove {win__} 0 0\", shell=True)\n    print('x11 screen buffer successfully setup.')\nif __name__ == '__main__':\n    start()"
+        }
+    ]
+}

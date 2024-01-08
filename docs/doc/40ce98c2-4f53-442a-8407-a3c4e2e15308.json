@@ -1,0 +1,15 @@
+{
+    "summary": "The code imports libraries and defines a function, Google_OCR_makeImageData, which creates a JSON request for the Document Text Detection API. The ocr_detection_google function uses this function to make a POST request to the Vision API. If no text is detected, an exception or None is returned.",
+    "details": [
+        {
+            "comment": "This code imports necessary libraries and defines a function, Google_OCR_makeImageData, which takes an image path as input, reads the image data, encodes it, and constructs a JSON request for Google's Document Text Detection API. The ocr_detection_google function uses this function to make a POST request to the Vision API endpoint, passing the necessary parameters including the API key that should be replaced with your own key for proper functionality.",
+            "location": "\"/media/root/Toshiba XG3/works/SingularGPT/docs/src/text_detection/ocr.py\":0-35",
+            "content": "import cv2\nimport os\nimport requests\nimport json\nfrom base64 import b64encode\nimport time\nfrom dotenv import load_dotenv\nload_dotenv()\ndef Google_OCR_makeImageData(imgpath):\n    with open(imgpath, 'rb') as f:\n        ctxt = b64encode(f.read()).decode()\n        img_req = {\n            'image': {\n                'content': ctxt\n            },\n            'features': [{\n                'type': 'DOCUMENT_TEXT_DETECTION',\n                'maxResults': 1\n            }]\n        }\n    return json.dumps({\"requests\": img_req}).encode()\ndef ocr_detection_google(imgpath):\n    start = time.process_time()\n    url = 'https://vision.googleapis.com/v1/images:annotate'\n    api_key = os.getenv('GOOGLE_OCR_API')              # *** Replace with your own Key ***\n    imgdata = Google_OCR_makeImageData(imgpath)\n    response = requests.post(url,\n                             data=imgdata,\n                             params={'key': api_key},\n                             headers={'Content_Type': 'application/json'})\n    print(\"*** Please replace the Google OCR key with your own (apply in https://cloud.google.com/vision) ***\")"
+        },
+        {
+            "comment": "If 'responses' not in response JSON, raise exception. If only an empty dictionary present as a single 'response', return None (no text detected). Otherwise, return the 'textAnnotations' from 1st 'response' except the first element.",
+            "location": "\"/media/root/Toshiba XG3/works/SingularGPT/docs/src/text_detection/ocr.py\":36-42",
+            "content": "    if 'responses' not in response.json():\n        raise Exception(response.json())\n    if response.json()['responses'] == [{}]:\n        # No Text\n        return None\n    else:\n        return response.json()['responses'][0]['textAnnotations'][1:]"
+        }
+    ]
+}

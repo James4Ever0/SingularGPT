@@ -1,0 +1,155 @@
+{
+    "url": {
+        "full": "https://github.com/abhiprojectz/SingularGPT",
+        "partial": "abhiprojectz/SingularGPT"
+    },
+    "file_mapping": {
+        "0": {
+            "filepath": "/README.md",
+            "entry_id": 0,
+            "language_id": "plain-text"
+        },
+        "1": {
+            "filepath": "/SGPT_Quickstart.txt",
+            "entry_id": 14,
+            "language_id": "plain-text"
+        },
+        "2": {
+            "filepath": "/example_generated_script.py",
+            "entry_id": 20,
+            "language_id": "python"
+        },
+        "3": {
+            "filepath": "/libs_installation.sh",
+            "entry_id": 24,
+            "language_id": "shell"
+        },
+        "4": {
+            "filepath": "/main.py",
+            "entry_id": 28,
+            "language_id": "python"
+        },
+        "5": {
+            "filepath": "/requirements.txt",
+            "entry_id": 32,
+            "language_id": "plain-text"
+        },
+        "6": {
+            "filepath": "/script.py",
+            "entry_id": 36,
+            "language_id": "python"
+        },
+        "7": {
+            "filepath": "/Prompts/prompts.txt",
+            "entry_id": 40,
+            "language_id": "plain-text"
+        },
+        "8": {
+            "filepath": "/component_detection/ip_region.py",
+            "entry_id": 44,
+            "language_id": "python"
+        },
+        "9": {
+            "filepath": "/component_detection/lib_ip/Bbox.py",
+            "entry_id": 58,
+            "language_id": "python"
+        },
+        "10": {
+            "filepath": "/component_detection/lib_ip/Component.py",
+            "entry_id": 68,
+            "language_id": "python"
+        },
+        "11": {
+            "filepath": "/component_detection/lib_ip/file_utils.py",
+            "entry_id": 90,
+            "language_id": "python"
+        },
+        "12": {
+            "filepath": "/component_detection/lib_ip/ip_detection.py",
+            "entry_id": 98,
+            "language_id": "python"
+        },
+        "13": {
+            "filepath": "/component_detection/lib_ip/ip_draw.py",
+            "entry_id": 148,
+            "language_id": "python"
+        },
+        "14": {
+            "filepath": "/component_detection/lib_ip/ip_preprocessing.py",
+            "entry_id": 160,
+            "language_id": "python"
+        },
+        "15": {
+            "filepath": "/config/CONFIG.py",
+            "entry_id": 166,
+            "language_id": "python"
+        },
+        "16": {
+            "filepath": "/config/CONFIG_ZEXUI.py",
+            "entry_id": 170,
+            "language_id": "python"
+        },
+        "17": {
+            "filepath": "/instructions_lib/fetch_commands.py",
+            "entry_id": 176,
+            "language_id": "python"
+        },
+        "18": {
+            "filepath": "/instructions_lib/generate_commands.py",
+            "entry_id": 180,
+            "language_id": "python"
+        },
+        "19": {
+            "filepath": "/instructions_lib/process_instructions.py",
+            "entry_id": 186,
+            "language_id": "python"
+        },
+        "20": {
+            "filepath": "/text_detection/Text.py",
+            "entry_id": 190,
+            "language_id": "python"
+        },
+        "21": {
+            "filepath": "/text_detection/ocr.py",
+            "entry_id": 206,
+            "language_id": "python"
+        },
+        "22": {
+            "filepath": "/text_detection/text_detection.py",
+            "entry_id": 212,
+            "language_id": "python"
+        },
+        "23": {
+            "filepath": "/vision/vision_utils.py",
+            "entry_id": 226,
+            "language_id": "python"
+        },
+        "24": {
+            "filepath": "/x11_server/start.py",
+            "entry_id": 234,
+            "language_id": "python"
+        },
+        "25": {
+            "filepath": "/zexui_lib/base_functions.py",
+            "entry_id": 238,
+            "language_id": "python"
+        },
+        "26": {
+            "filepath": "/zexui_lib/py_gui_commands.py",
+            "entry_id": 250,
+            "language_id": "python"
+        },
+        "27": {
+            "filepath": "/zexui_lib/x11_commands.py",
+            "entry_id": 264,
+            "language_id": "python"
+        },
+        "28": {
+            "filepath": "/zexui_lib/zexui.py",
+            "entry_id": 278,
+            "language_id": "python"
+        }
+    },
+    "project_name": "SingularGPT",
+    "split_count": 4
+}

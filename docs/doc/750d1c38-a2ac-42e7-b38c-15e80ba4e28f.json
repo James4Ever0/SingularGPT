@@ -1,0 +1,10 @@
+{
+    "summary": "The code is importing the ZexUI module from zexui_lib and creating an instance of it named \"zex\". The script then uses this instance to click on an image named \"tx_5.PNG\" located at \"C:\\Users\\abhis\\Desktop\\\", though scrolling down may be required beforehand, followed by finding the text 'File' and double-left clicking on it using the zex instance.",
+    "details": [
+        {
+            "comment": "The code is importing the ZexUI module from zexui_lib and creating an instance of it named \"zex\". The script then uses this instance to click on an image named \"tx_5.PNG\" located at \"C:\\Users\\abhis\\Desktop\\\", though scrolling down may be required beforehand, followed by finding the text 'File' and double-left clicking on it using the zex instance.",
+            "location": "\"/media/root/Toshiba XG3/works/SingularGPT/docs/src/script.py\":0-6",
+            "content": "from zexui_lib.zexui import ZexUI\n# import zexui_lib.zexui\nzex = ZexUI()\n# zex.text('Document Writer').click()\nzex.image(r\"C:\\\\Users\\\\abhis\\\\Desktop\\\\tx_5.PNG\").click()\n# scroll_down()\n# zex.text('File').findTopOf().mouseDoubleLeftClick()"
+        }
+    ]
+}

@@ -1,0 +1,15 @@
+{
+    "summary": "The code imports necessary libraries, initializes the OpenAI API with an API key, sets the endpoint, and has a `request` method. It defines a function that generates completions for a given prompt using the OpenAI API, checks required parameters, sets request parameters, and prints/returns the response.",
+    "details": [
+        {
+            "comment": "This code imports necessary libraries and defines the `OpenAI_API` class. It initializes an instance of this class with an API key, sets the OpenAI API endpoint, and has a method called `request` for making requests to the OpenAI API. The `completions` method takes a prompt, model, temperature, and maximum number of tokens as parameters and makes a request to the OpenAI API's completions endpoint.",
+            "location": "\"/media/root/Toshiba XG3/works/SingularGPT/docs/src/instructions_lib/generate_commands.py\":0-36",
+            "content": "import requests\nimport json\nfrom dotenv import load_dotenv\nimport os\nfrom instructions_lib.fetch_commands import load_prompt \nfrom instructions_lib.process_instructions import generate_script, execute_commands \nload_dotenv()\nclass OpenAI_API:\n    def __init__(self, api_key):\n        self.api_key = api_key\n        self.endpoint = 'https://api.openai.com/v1/'\n    def request(self, path, params=None):\n        headers = {\n            'Content-Type': 'application/json',\n            'Authorization': f'Bearer {self.api_key}',\n            'User-Agent': 'OpenAI API Client'\n        }\n        url = self.endpoint + path\n        try:\n            response = requests.post(url, headers=headers, json=params)\n            response.raise_for_status()\n        except requests.exceptions.HTTPError as err:\n            raise Exception(f'Error: {err}')\n        return response.json()\n    def completions(self, prompt, model, temperature=0.5, max_tokens=50):\n        path = 'completions'\n        params = {\n            'model': model,\n            'prompt': prompt,"
+        },
+        {
+            "comment": "This code defines a function that uses the OpenAI API to generate completions for a given prompt. It first checks if the prompt is provided, then initializes the OpenAI API with an environment variable API key and sets the parameters for the completion request. Finally, it makes the request to the API and prints and returns the response.",
+            "location": "\"/media/root/Toshiba XG3/works/SingularGPT/docs/src/instructions_lib/generate_commands.py\":37-50",
+            "content": "            'temperature': temperature,\n            'max_tokens': max_tokens\n        }\n        return self.request(path, params)\ndef generate(prompt):\n    if prompt:\n        prompt = load_prompt()\n    api_key = os.getenv('OPENAI_API') \n    openai = OpenAI_API(api_key)\n    response = openai.completions(prompt, 'text-davinci-002', temperature=0.7, max_tokens=100)\n    print(response)\n    return response"
+        }
+    ]
+}

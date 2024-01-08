@@ -1,0 +1,10 @@
+{
+    "summary": "The code imports necessary modules, defines a Jinja2 template for ZexUI instructions, obtains the current directory and its parent directory's path. It generates a script using the template and writes it to the parent directory's file \"script.py\". The execute_commands function is defined but left empty in this code snippet.",
+    "details": [
+        {
+            "comment": "The code imports necessary modules, defines a Jinja2 template for ZexUI instructions, obtains the current directory and its parent directory's path. It generates a script using the template and writes it to the parent directory's file \"script.py\". The execute_commands function is defined but left empty in this code snippet.",
+            "location": "\"/media/root/Toshiba XG3/works/SingularGPT/docs/src/instructions_lib/process_instructions.py\":0-29",
+            "content": "import os\nfrom jinja2 import Template\n# Need to implement a semantic syntax matcher that purifies the GPT generated commands response \n_ZEXUI_INSTRUCTIONS_TEMPLATE = Template(\"\"\"from ZexUI.zexui import ZexUI\nzex = ZexUI()\n{{ _code }}\n\"\"\")\n# current directory\nlocation = os.path.dirname(os.path.realpath(__file__))\n# Get the path of the parent directory (i.e., one level up)\nparent_dir = os.path.abspath(os.path.join(os.getcwd(), os.pardir))\n# Construct the path to the file to be written in the parent directory\nfile_path = os.path.join(parent_dir, 'script.py')\ndef generate_script(_code):\n    print(location)\n    with open(file_path, 'w', encoding='utf-8') as f:\n        _content = _ZEXUI_INSTRUCTIONS_TEMPLATE.render(_code=_code)\n        data = f.write(_content)\n    print(\"[Automation script has been generated.]\")\ndef execute_commands(_code):\n    pass"
+        }
+    ]
+}

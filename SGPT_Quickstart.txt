@@ -1,0 +1,78 @@
+!pip install python-xlib
+!pip install multiprocessing
+# !pip install xvfbwrapper
+!pip install pyvirtualdisplay
+!pip install pyperclip
+
+
+!sudo apt-get install xvfb xorg xserver-xorg scrot imagemagick x11-utils xdotool
+
+!pip install paddleocr paddlepaddle
+
+from IPython.display import HTML, display
+
+def set_css():
+  display(HTML('''
+  <style>
+    pre {
+        white-space: pre-wrap;
+    }
+  </style>
+  '''))
+get_ipython().events.register('pre_run_cell', set_css)
+
+from pyvirtualdisplay import Display
+disp = Display(size=(1536, 864), color_depth=24)
+disp.start()
+
+import os 
+print(os.environ['DISPLAY'])
+
+!git clone https://github.com/abhiprojectz/SingularGPT.git
+%cd SingularGPT
+
+%%bash 
+
+sudo apt update
+sudo apt install tasksel
+sudo add-apt-repository ppa:libreoffice/ppa -y
+sudo apt install libreoffice
+
+import multiprocessing
+import subprocess
+from time import sleep
+
+def task_3():
+  subprocess.run('sudo libreoffice', shell=True)
+  # subprocess.run('zenity --error --text="An error occurjfhgkjfnkjgnred\!" --title="Warning\!"', shell=True)
+
+
+p3 = multiprocessing.Process(target=task_3)
+
+# starting process 3
+p3.start()
+
+!wget https://github.com/swillner/highlight-pointer/releases/download/v1.1.3/highlight-pointer
+!chmod +x highlight-pointer
+
+import multiprocessing
+import subprocess
+from time import sleep
+
+def task_3():
+  subprocess.run('./highlight-pointer', shell=True)
+  # subprocess.run('zenity --error --text="An error occurjfhgkjfnkjgnred\!" --title="Warning\!"', shell=True)
+
+def ht_():
+  p3 = multiprocessing.Process(target=task_3)
+  p3.start()
+
+%%writefile Prompts/prompt
+
+hello click on text Writer Document
+
+!python main.py
+
+!python example_generated_script.py
+
+

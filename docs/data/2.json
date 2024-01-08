@@ -1,0 +1,544 @@
+{
+    "200": {
+        "file_id": 20,
+        "content": "        self.word_width = self.width / len(self.content)\n    def shrink_bound(self, binary_map):\n        bin_clip = binary_map[self.location['top']:self.location['bottom'], self.location['left']:self.location['right']]\n        height, width = np.shape(bin_clip)\n        shrink_top = 0\n        shrink_bottom = 0\n        for i in range(height):\n            # top\n            if shrink_top == 0:\n                if sum(bin_clip[i]) == 0:\n                    shrink_top = 1\n                else:\n                    shrink_top = -1\n            elif shrink_top == 1:\n                if sum(bin_clip[i]) != 0:\n                    self.location['top'] += i\n                    shrink_top = -1\n            # bottom\n            if shrink_bottom == 0:\n                if sum(bin_clip[height-i-1]) == 0:\n                    shrink_bottom = 1\n                else:\n                    shrink_bottom = -1\n            elif shrink_bottom == 1:\n                if sum(bin_clip[height-i-1]) != 0:\n                    self.location['bottom'] -= i",
+        "type": "code",
+        "location": "/text_detection/Text.py:105-132"
+    },
+    "201": {
+        "file_id": 20,
+        "content": "This code initializes the word width based on the text content length and then defines a function to adjust the bounding box of the text by checking the binary map and shrinking the top and bottom values accordingly.",
+        "type": "comment"
+    },
+    "202": {
+        "file_id": 20,
+        "content": "                    shrink_bottom = -1\n            if shrink_top == -1 and shrink_bottom == -1:\n                break\n        shrink_left = 0\n        shrink_right = 0\n        for j in range(width):\n            # left\n            if shrink_left == 0:\n                if sum(bin_clip[:, j]) == 0:\n                    shrink_left = 1\n                else:\n                    shrink_left = -1\n            elif shrink_left == 1:\n                if sum(bin_clip[:, j]) != 0:\n                    self.location['left'] += j\n                    shrink_left = -1\n            # right\n            if shrink_right == 0:\n                if sum(bin_clip[:, width-j-1]) == 0:\n                    shrink_right = 1\n                else:\n                    shrink_right = -1\n            elif shrink_right == 1:\n                if sum(bin_clip[:, width-j-1]) != 0:\n                    self.location['right'] -= j\n                    shrink_right = -1\n            if shrink_left == -1 and shrink_right == -1:\n                break\n        self.width = self.location['right'] - self.location['left']",
+        "type": "code",
+        "location": "/text_detection/Text.py:133-164"
+    },
+    "203": {
+        "file_id": 20,
+        "content": "This code is iterating through the width of an image, determining if there are any non-zero pixels on either side. It then calculates the location and width of a detected text based on these iterations. If no non-zero pixels are found on both sides, it breaks out of the loop.",
+        "type": "comment"
+    },
+    "204": {
+        "file_id": 20,
+        "content": "        self.height = self.location['bottom'] - self.location['top']\n        self.area = self.width * self.height\n        self.word_width = self.width / len(self.content)\n    '''\n    *********************\n    *** Visualization ***\n    *********************\n    '''\n    def visualize_element(self, img, color=(0, 0, 255), line=1):\n        loc = self.location\n        cv2.rectangle(img, (loc['left'], loc['top']), (loc['right'], loc['bottom']), color, line)",
+        "type": "code",
+        "location": "/text_detection/Text.py:165-176"
+    },
+    "205": {
+        "file_id": 20,
+        "content": "This code calculates the height, area, and word width of a text element based on its location. It also includes a function to visualize the element as a rectangle on an image using OpenCV's rectangle() function.",
+        "type": "comment"
+    },
+    "206": {
+        "file_id": 21,
+        "content": "/text_detection/ocr.py",
+        "type": "filepath"
+    },
+    "207": {
+        "file_id": 21,
+        "content": "The code imports libraries and defines a function, Google_OCR_makeImageData, which creates a JSON request for the Document Text Detection API. The ocr_detection_google function uses this function to make a POST request to the Vision API. If no text is detected, an exception or None is returned.",
+        "type": "summary"
+    },
+    "208": {
+        "file_id": 21,
+        "content": "import cv2\nimport os\nimport requests\nimport json\nfrom base64 import b64encode\nimport time\nfrom dotenv import load_dotenv\nload_dotenv()\ndef Google_OCR_makeImageData(imgpath):\n    with open(imgpath, 'rb') as f:\n        ctxt = b64encode(f.read()).decode()\n        img_req = {\n            'image': {\n                'content': ctxt\n            },\n            'features': [{\n                'type': 'DOCUMENT_TEXT_DETECTION',\n                'maxResults': 1\n            }]\n        }\n    return json.dumps({\"requests\": img_req}).encode()\ndef ocr_detection_google(imgpath):\n    start = time.process_time()\n    url = 'https://vision.googleapis.com/v1/images:annotate'\n    api_key = os.getenv('GOOGLE_OCR_API')              # *** Replace with your own Key ***\n    imgdata = Google_OCR_makeImageData(imgpath)\n    response = requests.post(url,\n                             data=imgdata,\n                             params={'key': api_key},\n                             headers={'Content_Type': 'application/json'})\n    print(\"*** Please replace the Google OCR key with your own (apply in https://cloud.google.com/vision) ***\")",
+        "type": "code",
+        "location": "/text_detection/ocr.py:1-36"
+    },
+    "209": {
+        "file_id": 21,
+        "content": "This code imports necessary libraries and defines a function, Google_OCR_makeImageData, which takes an image path as input, reads the image data, encodes it, and constructs a JSON request for Google's Document Text Detection API. The ocr_detection_google function uses this function to make a POST request to the Vision API endpoint, passing the necessary parameters including the API key that should be replaced with your own key for proper functionality.",
+        "type": "comment"
+    },
+    "210": {
+        "file_id": 21,
+        "content": "    if 'responses' not in response.json():\n        raise Exception(response.json())\n    if response.json()['responses'] == [{}]:\n        # No Text\n        return None\n    else:\n        return response.json()['responses'][0]['textAnnotations'][1:]",
+        "type": "code",
+        "location": "/text_detection/ocr.py:37-43"
+    },
+    "211": {
+        "file_id": 21,
+        "content": "If 'responses' not in response JSON, raise exception. If only an empty dictionary present as a single 'response', return None (no text detected). Otherwise, return the 'textAnnotations' from 1st 'response' except the first element.",
+        "type": "comment"
+    },
+    "212": {
+        "file_id": 22,
+        "content": "/text_detection/text_detection.py",
+        "type": "filepath"
+    },
+    "213": {
+        "file_id": 22,
+        "content": "This code utilizes Google or Paddle OCR for text detection, removes noise and merges intersected texts, recognizes sentences, visualizes detections, saves results as JSON, and displays completion time.",
+        "type": "summary"
+    },
+    "214": {
+        "file_id": 22,
+        "content": "import text_detection.ocr as ocr\nfrom text_detection.Text import Text\nimport numpy as np\nimport cv2\nimport json\nimport time\nimport os\nfrom os.path import join as pjoin\ndef save_detection_json(file_path, texts, img_shape):\n    f_out = open(file_path, 'w')\n    output = {'img_shape': img_shape, 'texts': []}\n    for text in texts:\n        c = {'id': text.id, 'content': text.content}\n        loc = text.location\n        c['column_min'], c['row_min'], c['column_max'], c['row_max'] = loc['left'], loc['top'], loc['right'], loc['bottom']\n        c['width'] = text.width\n        c['height'] = text.height\n        output['texts'].append(c)\n    json.dump(output, f_out, indent=4)\ndef visualize_texts(org_img, texts, shown_resize_height=None, write_path=None):\n    img = org_img.copy()\n    for text in texts:\n        text.visualize_element(img, line=2)\n    img_resize = img\n    if shown_resize_height is not None:\n        img_resize = cv2.resize(img, (int(shown_resize_height * (img.shape[1]/img.shape[0])), shown_resize_height))\n    if write_path is not None:",
+        "type": "code",
+        "location": "/text_detection/text_detection.py:1-34"
+    },
+    "215": {
+        "file_id": 22,
+        "content": "This code contains two functions: `save_detection_json` and `visualize_texts`. The `save_detection_json` function takes a file path, list of texts, and image shape as inputs. It then creates an output dictionary containing the image shape and text information. For each text in the input list, it extracts the relevant data (id, content, location, width, height) and appends it to the 'texts' list within the output dictionary. Finally, it writes the output dictionary as a JSON file at the specified file path. The `visualize_texts` function takes an original image, a list of texts, an optional resize height, and an optional write path as inputs. It creates a copy of the original image and then visualizes each text within the image by calling the `visualize_element` method on each text object. If the `shown_resize_height` is specified, it resizes the image to that height while maintaining aspect ratio. Finally, if the `write_path` is provided, it writes the resulting image to a file at the specified path.",
+        "type": "comment"
+    },
+    "216": {
+        "file_id": 22,
+        "content": "        cv2.imwrite(write_path, img)\ndef text_sentences_recognition(texts):\n    '''\n    Merge separate words detected by Google ocr into a sentence\n    '''\n    changed = True\n    while changed:\n        changed = False\n        temp_set = []\n        for text_a in texts:\n            merged = False\n            for text_b in temp_set:\n                if text_a.is_on_same_line(text_b, 'h', bias_justify=0.2 * min(text_a.height, text_b.height), bias_gap=2 * max(text_a.word_width, text_b.word_width)):\n                    text_b.merge_text(text_a)\n                    merged = True\n                    changed = True\n                    break\n            if not merged:\n                temp_set.append(text_a)\n        texts = temp_set.copy()\n    for i, text in enumerate(texts):\n        text.id = i\n    return texts\ndef merge_intersected_texts(texts):\n    '''\n    Merge intersected texts (sentences or words)\n    '''\n    changed = True\n    while changed:\n        changed = False\n        temp_set = []\n        for text_a in texts:\n            merged = False",
+        "type": "code",
+        "location": "/text_detection/text_detection.py:35-72"
+    },
+    "217": {
+        "file_id": 22,
+        "content": "This code contains two functions for text recognition: \"text_sentences_recognition\" and \"merge_intersected_texts\". The first function merges separate words detected by Google OCR into a sentence, while the second function merges intersected texts (sentences or words). Both functions use a while loop to continuously check for text merging opportunities until no more changes are made.",
+        "type": "comment"
+    },
+    "218": {
+        "file_id": 22,
+        "content": "            for text_b in temp_set:\n                if text_a.is_intersected(text_b, bias=2):\n                    text_b.merge_text(text_a)\n                    merged = True\n                    changed = True\n                    break\n            if not merged:\n                temp_set.append(text_a)\n        texts = temp_set.copy()\n    return texts\ndef text_cvt_orc_format(ocr_result):\n    texts = []\n    if ocr_result is not None:\n        for i, result in enumerate(ocr_result):\n            error = False\n            x_coordinates = []\n            y_coordinates = []\n            text_location = result['boundingPoly']['vertices']\n            content = result['description']\n            for loc in text_location:\n                if 'x' not in loc or 'y' not in loc:\n                    error = True\n                    break\n                x_coordinates.append(loc['x'])\n                y_coordinates.append(loc['y'])\n            if error: continue\n            location = {'left': min(x_coordinates), 'top': min(y_coordinates),",
+        "type": "code",
+        "location": "/text_detection/text_detection.py:73-101"
+    },
+    "219": {
+        "file_id": 22,
+        "content": "The code processes OCR results, extracting text and coordinates from each result. It checks if the coordinates are valid and avoids processing any invalid results. If valid, it stores the text and its location in a list. The process continues for all OCR results.",
+        "type": "comment"
+    },
+    "220": {
+        "file_id": 22,
+        "content": "                        'right': max(x_coordinates), 'bottom': max(y_coordinates)}\n            texts.append(Text(i, content, location))\n    return texts\ndef text_cvt_orc_format_paddle(paddle_result):\n    texts = []\n    result = paddle_result\n    _ls = []\n    for i in result:\n      for j in i:\n        _ls.append(j)\n    for i, line in enumerate(_ls):\n        points = np.array(line[0])\n        location = {'left': int(min(points[:, 0])), 'top': int(min(points[:, 1])), 'right': int(max(points[:, 0])),\n                    'bottom': int(max(points[:, 1]))}\n        content = line[1][0]\n        texts.append(Text(i, content, location))\n    return texts\ndef text_filter_noise(texts):\n    valid_texts = []\n    for text in texts:\n        if len(text.content) <= 1 and text.content.lower() not in ['a', ',', '.', '!', '?', '$', '%', ':', '&', '+']:\n            continue\n        valid_texts.append(text)\n    return valid_texts\ndef text_detection(input_file, output_file, method='paddle', paddle_model=None):\n    '''\n    :param method: google or paddle",
+        "type": "code",
+        "location": "/text_detection/text_detection.py:102-137"
+    },
+    "221": {
+        "file_id": 22,
+        "content": "1. Function `text_detection` takes input file, output file, and optionally a paddle model for text detection.\n2. The method parameter specifies whether to use the Google or Paddle OCR method.\n3. Texts are detected using either Google's OCR API or Paddle OCR (if specified) and stored in a list.\n4. `text_cvt_orc_format_paddle` converts text detection results from Paddle OCR format to a standard format.\n5. `text_cvt_orc_format_paddle` extracts points, content, and location for each line of the text result.\n6. `text_filter_noise` filters out noisy or unnecessary texts from the list.",
+        "type": "comment"
+    },
+    "222": {
+        "file_id": 22,
+        "content": "    :param paddle_model: the preload paddle model for paddle ocr\n    '''\n    start = time.process_time()\n    name = input_file.split('/')[-1][:-4]\n    ocr_root = pjoin(output_file, 'ocr')\n    img = cv2.imread(input_file)\n    if method == 'google':\n        print('*** Detect Text through Google OCR ***')\n        ocr_result = ocr.ocr_detection_google(input_file)\n        texts = text_cvt_orc_format(ocr_result)\n        texts = merge_intersected_texts(texts)\n        texts = text_filter_noise(texts)\n        texts = text_sentences_recognition(texts)\n    elif method == 'paddle':\n        # The import of the paddle ocr can be separate to the beginning of the program if you decide to use this method\n        from paddleocr import PaddleOCR\n        print('*** Detect Text through Paddle OCR ***')\n        if paddle_model is None:\n            paddle_model = PaddleOCR(use_angle_cls=True, lang=\"en\")\n        result = paddle_model.ocr(input_file, cls=True)\n        texts = text_cvt_orc_format_paddle(result)\n    else:\n        raise ValueError('Method has to be \"google\" or \"paddle\"')",
+        "type": "code",
+        "location": "/text_detection/text_detection.py:138-161"
+    },
+    "223": {
+        "file_id": 22,
+        "content": "This code is for text detection using either Google OCR or Paddle OCR, and it takes an input file as a parameter. It reads the image from the input file, and depending on the method selected, it performs text detection using either Google's OCR API or PaddleOCR library. The results are processed further to remove noise, merge intersected texts, and recognize sentences before storing them in the specified output folder.",
+        "type": "comment"
+    },
+    "224": {
+        "file_id": 22,
+        "content": "    visualize_texts(img, texts, shown_resize_height=800, write_path=pjoin(ocr_root, name+'.png'))\n    save_detection_json(pjoin(ocr_root, name+'.json'), texts, img.shape)\n    # calculate the elapsed time of the compositional detection process\n    elapsed_time = time.process_time() - start\n    print(f\"[Text Detection Completed in {elapsed_time:.3f} seconds.]\\nOutput JSON file path: {pjoin(ocr_root, name + '.json')}\")",
+        "type": "code",
+        "location": "/text_detection/text_detection.py:163-168"
+    },
+    "225": {
+        "file_id": 22,
+        "content": "This code snippet visualizes detected texts, saves the detection results as JSON and calculates elapsed time of the process. It then prints the completion time and output file path.",
+        "type": "comment"
+    },
+    "226": {
+        "file_id": 23,
+        "content": "/vision/vision_utils.py",
+        "type": "filepath"
+    },
+    "227": {
+        "file_id": 23,
+        "content": "The code consists of three image processing functions, which use OpenCV and other libraries for detecting text and components. The code is organized for debugging purposes with proper imports and output directory creation. Key parameters define input flags and the dictionary controls the image processing operations.",
+        "type": "summary"
+    },
+    "228": {
+        "file_id": 23,
+        "content": "from os.path import join as pjoin\nimport cv2\nimport os\nimport numpy as np\nfrom config.CONFIG import _OCR\n\"\"\"\nMain Functions for Components detection purposes.\n\"\"\"\n# Getting highest between width and height based on numpy array image \ndef get_longest_side(img):\n    height, width, channels = img.shape\n    if height > width:\n        return height\n    else:\n        return width \n# For debugging purposes\ndef resize_height_by_longest_edge(img_path, resize_length):\n    org = cv2.imread(img_path)\n    height, width = org.shape[:2]\n    if height > width:\n        return resize_length\n    else:\n        return int(resize_length * (height / width))\n# Detecting text \ndef detect_text(input_path_img, output_root):\n    # Import the text detection module and call the text_detection function\n    import text_detection.text_detection as text\n    # Create the output directory\n    os.makedirs(pjoin(output_root, 'ocr'), exist_ok=True)\n    text.text_detection(input_path_img, output_root, method=_OCR)\n# Detecting components using opencv approaches",
+        "type": "code",
+        "location": "/vision/vision_utils.py:1-43"
+    },
+    "229": {
+        "file_id": 23,
+        "content": "This code contains functions for component detection, text detection using OpenCV and other libraries. It defines get_longest_side() to determine the longest image dimension, resize_height_by_longest_edge() to resize images based on longest edge, and detect_text() to detect text in images. The code is organized for debugging and component detection purposes with proper imports and output directory creation.",
+        "type": "comment"
+    },
+    "230": {
+        "file_id": 23,
+        "content": "def detect_component_by_ip(input_path_img, output_root, key_params, resized_height):\n    os.makedirs(pjoin(output_root, 'element'), exist_ok=True)\n    import component_detection.ip_region as ip\n    ip.compo_detection(input_path_img, output_root, key_params, resize_by_height=resized_height)\n# Detecting both text and components at once \ndef detect_components_and_text(input_path_img, output_root, _is_text, _is_element):\n    key_params = {'min-grad':3, 'ffl-block':5, 'min-ele-area':25, 'max-word-inline-gap':4, 'max-line-gap':4,\n                    'merge-contained-ele':True, 'merge-line-to-paragraph':False, 'remove-bar':True}\n    resize_length = get_longest_side(cv2.imread(input_path_img))\n    resized_height = resize_height_by_longest_edge(input_path_img, resize_length)\n    if _is_text:\n        detect_text(input_path_img, output_root)\n    if _is_element:\n        detect_component_by_ip(input_path_img, output_root, key_params, resized_height)\ndef detect_component(input_path_img, output_root, _is_text, _is_element):",
+        "type": "code",
+        "location": "/vision/vision_utils.py:44-64"
+    },
+    "231": {
+        "file_id": 23,
+        "content": "This code contains three functions for image processing tasks, including text and component detection. The first function, `detect_component_by_ip`, creates an output directory named 'element' and uses the `component_detection.ip_region` module to detect components in the input image. The second function, `detect_components_and_text`, can detect both components and text based on parameters like minimum gradient, minimum element area, and line gap. Lastly, the `detect_component` function takes in an input image, output root directory, and flags for whether to detect text or elements, calling the appropriate detection function accordingly.",
+        "type": "comment"
+    },
+    "232": {
+        "file_id": 23,
+        "content": "    key_params = {'min-grad':3, 'ffl-block':5, 'min-ele-area':25, 'max-word-inline-gap':4, 'max-line-gap':4,\n                    'merge-contained-ele':True, 'merge-line-to-paragraph':False, 'remove-bar':True}\n    resize_length = get_longest_side(cv2.imread(input_path_img))\n    resized_height = resize_height_by_longest_edge(input_path_img, resize_length)\n    is_clf = False\n    if _is_text:\n        detect_text(input_path_img, output_root)\n    if _is_element:\n        detect_component_by_ip(input_path_img, output_root, key_params, resized_height)\n# set input image path\n# input_path_img = 'data/input/gg.PNG'\n# output_root = 'data/output'\n# detect_component(input_path_img, output_root, _is_text=True, _is_element=True)",
+        "type": "code",
+        "location": "/vision/vision_utils.py:65-83"
+    },
+    "233": {
+        "file_id": 23,
+        "content": "This code defines a dictionary of key parameters and performs image processing operations based on input flags. If `_is_text`, it detects text in the input image, and if `_is_element`, it detects components using the defined key parameters and resized height. The input image path and output root are also set.",
+        "type": "comment"
+    },
+    "234": {
+        "file_id": 24,
+        "content": "/x11_server/start.py",
+        "type": "filepath"
+    },
+    "235": {
+        "file_id": 24,
+        "content": "The code sets up an X11 screen buffer using pyvirtualdisplay, starts the display at a specified size and color depth, and then changes the window dimensions. It uses subprocess to run commands in the shell environment, such as setting the DISPLAY environment variable and moving the window to coordinates (0, 0). The code is written in Python and intended for use on an x11 server.",
+        "type": "summary"
+    },
+    "236": {
+        "file_id": 24,
+        "content": "import subprocess\nfrom time import sleep\nimport re\nfrom pyvirtualdisplay import Display\nimport os \ndef start():\n    disp = Display(size=(1536, 864), color_depth=24)\n    disp.start()\n    print(os.environ['DISPLAY'])\n    subprocess.run(f\"export DISPLAY={os.environ['DISPLAY']}\", shell=True)\n    sleep(3)\n    # subprocess.run(\"sudo google-chrome --window-size=1536,864 --no-sandbox https://google.com &\", shell=True)\n    # Changing window dimensions\n    window = subprocess.check_output(\"xdotool getmouselocation\", shell=True)\n    win__ = int(re.search(r'\\d+', str(window).split(\" \")[-1].strip()).group()) \n    print(win__)\n    subprocess.run(f\"xdotool windowmove {win__} 0 0\", shell=True)\n    print('x11 screen buffer successfully setup.')\nif __name__ == '__main__':\n    start()",
+        "type": "code",
+        "location": "/x11_server/start.py:1-28"
+    },
+    "237": {
+        "file_id": 24,
+        "content": "The code sets up an X11 screen buffer using pyvirtualdisplay, starts the display at a specified size and color depth, and then changes the window dimensions. It uses subprocess to run commands in the shell environment, such as setting the DISPLAY environment variable and moving the window to coordinates (0, 0). The code is written in Python and intended for use on an x11 server.",
+        "type": "comment"
+    },
+    "238": {
+        "file_id": 25,
+        "content": "/zexui_lib/base_functions.py",
+        "type": "filepath"
+    },
+    "239": {
+        "file_id": 25,
+        "content": "Both comments describe a function that utilizes numpy and opencv libraries for image processing. The function takes original and target image paths as input, performs template matching to find coordinates of the cropped image within the original image, and returns/prints the relevant coordinates as a list.",
+        "type": "summary"
+    },
+    "240": {
+        "file_id": 25,
+        "content": "import numpy as np \nimport cv2 \ndef find_obj_to_left_of_target_obj(target_obj, objects):\n  # Convert the given list of coordinates into NumPy array format\n  coordinates = np.array(objects)\n  # Find the index of the target point in the NumPy array of coordinates\n  target_index = np.where((coordinates == target_obj).all(axis=1))[0][0]\n  # Find the coordinates of the point that is just left side of the target point\n  left_side_coords = coordinates[target_index - 1]\n  # Iterate through the NumPy array of coordinates and draw a circle for each point with green color except for the point that is just left side of the target point\n  # for coord in coordinates:\n  #     if (coord == left_side_coords).all():\n  #         cv2.circle(img, tuple(coord), 10, (0, 0, 255), -1)\n  #     else:\n  #         cv2.circle(img, tuple(coord), 10, (0, 255, 0), -1)\n  # Print the coordinates of the point that is just left side of the target point\n  print(f\"Coordinates of the point just left side of the target point: {left_side_coords}\")",
+        "type": "code",
+        "location": "/zexui_lib/base_functions.py:1-22"
+    },
+    "241": {
+        "file_id": 25,
+        "content": "The code imports numpy and opencv libraries to find the coordinates of an object to the left of a target object. It converts the list of coordinates into NumPy array format, finds the index of the target point, determines the coordinates of the left side point, and iterates through the array to draw circles using different colors based on the condition. Finally, it prints the coordinates of the left side point.",
+        "type": "comment"
+    },
+    "242": {
+        "file_id": 25,
+        "content": "  return left_side_coords\ndef find_obj_to_right_of_target_obj(target_obj, objects):\n  # Convert the given list of coordinates into NumPy array format\n  coordinates = np.array(objects)\n  # Find the index of the target point in the NumPy array of coordinates\n  target_index = np.where((coordinates == target_obj).all(axis=1))[0][0]\n  # Find the coordinates of the point that is just right side of the target point\n  right_side_coords = coordinates[target_index + 1]\n  # Iterate through the NumPy array of coordinates and draw a circle for each point with green color except for the point that is just left side of the target point\n  # for coord in coordinates:\n  #     if (coord == left_side_coords).all():\n  #         cv2.circle(img, tuple(coord), 10, (0, 0, 255), -1)\n  #     else:\n  #         cv2.circle(img, tuple(coord), 10, (0, 255, 0), -1)\n  # Print the coordinates of the point that is just left side of the target point\n  print(f\"Coordinates of the point just left side of the target point: {right_side_coords}\")",
+        "type": "code",
+        "location": "/zexui_lib/base_functions.py:23-44"
+    },
+    "243": {
+        "file_id": 25,
+        "content": "This code defines a function to find the coordinates of an object to the right of a target object, converts list coordinates into NumPy array format, finds the index of target point in the array, and returns the coordinates of the next point. It also iterates through the array to draw circles for each point on an image, with green color except for the point just left of the target.",
+        "type": "comment"
+    },
+    "244": {
+        "file_id": 25,
+        "content": "  return right_side_coords\ndef find_obj_to_bottom_of_target_obj(target_obj, objects):\n  # Convert the given list of coordinates into NumPy array format\n  coordinates = np.array(objects)\n  # Find the index of the target point in the NumPy array of coordinates\n  target_index = np.where((coordinates == target_obj).all(axis=1))[0][0]\n  # Find the coordinates of the point that is just bottom side of the target point\n  bottom_side_coords = coordinates[np.where(coordinates[:, 0] == coordinates[target_index][0])[0][np.where(coordinates[:, 0] == coordinates[target_index][0])[0] > target_index][0]]\n  # Iterate through the NumPy array of coordinates and draw a circle for each point with green color except for the point that is just left side of the target point\n  # for coord in coordinates:\n  #     if (coord == left_side_coords).all():\n  #         cv2.circle(img, tuple(coord), 10, (0, 0, 255), -1)\n  #     else:\n  #         cv2.circle(img, tuple(coord), 10, (0, 255, 0), -1)\n  # Print the coordinates of the point that is just left side of the target point",
+        "type": "code",
+        "location": "/zexui_lib/base_functions.py:45-66"
+    },
+    "245": {
+        "file_id": 25,
+        "content": "The code finds the coordinates of a point just below the target object in a given list of coordinates, converts them to a NumPy array, and returns those coordinates. It also has logic for drawing circles on an image but is not included in this segment.",
+        "type": "comment"
+    },
+    "246": {
+        "file_id": 25,
+        "content": "  print(f\"Coordinates of the point just left side of the target point: {bottom_side_coords}\")\n  return bottom_side_coords\ndef find_obj_to_top_of_target_obj(target_obj, objects):\n  # Convert the given list of coordinates into NumPy array format\n  coordinates = np.array(objects)\n  # Find the index of the target point in the NumPy array of coordinates\n  target_index = np.where((coordinates == target_obj).all(axis=1))[0][0]\n  # Find the coordinates of the point that is just top side of the target point\n  top_side_coords = coordinates[np.where(coordinates[:, 0] == coordinates[target_index][0])[0][np.where(coordinates[:, 0] == coordinates[target_index][0])[0] < target_index][-1]]\n  # Iterate through the NumPy array of coordinates and draw a circle for each point with green color except for the point that is just left side of the target point\n  # for coord in coordinates:\n  #     if (coord == left_side_coords).all():\n  #         cv2.circle(img, tuple(coord), 10, (0, 0, 255), -1)\n  #     else:\n  #         cv2.circle(img, tuple(coord), 10, (0, 255, 0), -1)",
+        "type": "code",
+        "location": "/zexui_lib/base_functions.py:67-86"
+    },
+    "247": {
+        "file_id": 25,
+        "content": "This function finds the coordinates of the point just above and just to the left side of a target point in a given list of coordinates. It converts the list into a NumPy array, finds the index of the target point, retrieves the top-side coordinates, and then iterates through the array to draw circles for each point using OpenCV. The left-side coordinates are not drawn with green color.",
+        "type": "comment"
+    },
+    "248": {
+        "file_id": 25,
+        "content": "  # Print the coordinates of the point that is just left side of the target point\n  print(f\"Coordinates of the point just left side of the target point: {top_side_coords}\")\n  return top_side_coords\ndef find_location_of_img_obj(original_path, target_path):\n  # Load the original image and convert it to grayscale\n  original_image = cv2.imread(original_path)\n  original_gray = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)\n  # Load the cropped image and convert it to grayscale\n  cropped_image = cv2.imread(target_path)\n  cropped_gray = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)\n  # Find the coordinates of the cropped image within the original image\n  result = cv2.matchTemplate(original_gray, cropped_gray, cv2.TM_CCOEFF_NORMED)\n  (_, _, minLoc, maxLoc) = cv2.minMaxLoc(result)\n  (left, top) = maxLoc\n  right = left + cropped_gray.shape[1]\n  bottom = top + cropped_gray.shape[0]\n  print(f\"Coordinates of cropped image with respect to original image: ({left}, {top}, {right}, {bottom})\")\n  return [left, top, right, bottom]",
+        "type": "code",
+        "location": "/zexui_lib/base_functions.py:88-110"
+    },
+    "249": {
+        "file_id": 25,
+        "content": "This function takes original and target image paths as input, loads and converts them to grayscale, and uses template matching to find the coordinates of the cropped image within the original image. It then prints and returns the coordinates as a list.",
+        "type": "comment"
+    },
+    "250": {
+        "file_id": 26,
+        "content": "/zexui_lib/py_gui_commands.py",
+        "type": "filepath"
+    },
+    "251": {
+        "file_id": 26,
+        "content": "The code includes functions for mouse actions like capturing screenshots, clicking, and typing text using xdotool and pyautogui. Additionally, it has functions for pyautogui-based mouse movements with a wait function and 'mouseToggleDown'/'mouseToggleUp' functionality to simulate left mouse button presses and releases at specific coordinates.",
+        "type": "summary"
+    },
+    "252": {
+        "file_id": 26,
+        "content": "import subprocess\nimport re\nfrom time import sleep\nimport pyautogui\nimport random\ndef capture(_img):\n    # Capture the entire screen\n    screenshot = pyautogui.screenshot()\n    print(_img)\n    # Save the screenshot to the same file, overwriting the previous screenshot\n    screenshot.save(_img)\ndef click_one(x, y):\n    \"\"\"\n    This function uses the xdotool utility to move the mouse to given x and y coordinates on the screen and\n    performs a left-click (mouse button 1) operation.\n    Parameters:\n    x (int): The x-coordinate on the screen where the left-click operation needs to be performed.\n    y (int): The y-coordinate on the screen where the left-click operation needs to be performed.\n    \"\"\"\n    # # move the mouse to a specific coordinate\n    pyautogui.moveTo(x, y, duration=0.6)\n    # click the left mouse button\n    pyautogui.click(x, y)\ndef click_two(x, y):\n    \"\"\"\n    This function uses the xdotool utility to move the mouse to given x and y coordinates on the screen and\n    performs a right-click (mouse button 2) operation.",
+        "type": "code",
+        "location": "/zexui_lib/py_gui_commands.py:1-34"
+    },
+    "253": {
+        "file_id": 26,
+        "content": "Code contains functions to capture screenshots, click at specific coordinates using pyautogui and xdotool utilities. The \"click_one\" function performs a left-click while the \"click_two\" function performs a right-click.",
+        "type": "comment"
+    },
+    "254": {
+        "file_id": 26,
+        "content": "    Parameters:\n    x (int): The x-coordinate on the screen where the right-click operation needs to be performed.\n    y (int): The y-coordinate on the screen where the right-click operation needs to be performed.\n    \"\"\"\n    # move the mouse to a specific coordinate\n    pyautogui.moveTo(x, y)\n    # Move the mouse to the provided x and y coordinates and perform a right click\n    pyautogui.doubleClick(x, y)\ndef write(_text, delay):\n    \"\"\"\n    This function uses the xdotool utility to simulate keyboard input and type out the provided text.\n    Parameters:\n    _text (str): The text to be typed out.\n    \"\"\"\n    if delay: \n        delay = 0.2\n        pyautogui.typewrite(_text, interval=delay)\n    else:\n        pyautogui.write(_text)\ndef press_key(x):\n    \"\"\"\n    This function uses the xdotool utility to simulate key presses on the keyboard.\n    Parameters:\n    x (str): The key to be press. For example, 'ctrl+v', 'ctrl+t', 'shift+tab' etc.\n    \"\"\"\n    # press and release a key\n    pyautogui.press(x)\ndef left_click():\n    \"\"\"",
+        "type": "code",
+        "location": "/zexui_lib/py_gui_commands.py:36-74"
+    },
+    "255": {
+        "file_id": 26,
+        "content": "This code provides functions to move the mouse, write text, and press keys using the pyautogui and xdotool utilities. The `moveTo` function moves the mouse to a specific coordinate, `doubleClick` performs a right-click at a given coordinate, `write` types out provided text with optional delay, and `press_key` simulates key presses on the keyboard.",
+        "type": "comment"
+    },
+    "256": {
+        "file_id": 26,
+        "content": "    This function uses the xdotool utility to perform a left-click (mouse button 1) operation.\n    \"\"\"\n    # click the left mouse button\n    pyautogui.click()\ndef middle_click():\n    \"\"\"\n    This function uses the xdotool utility to perform a middle-click (mouse button 2) operation.\n    \"\"\"\n    pyautogui.middleClick()\ndef right_click():\n    \"\"\"\n    This function uses the xdotool utility to perform a right-click (mouse button 3) operation.\n    \"\"\"\n    pyautogui.rightClick()\ndef left_click_at(x,y):\n    \"\"\"\n    This function uses the xdotool utility to move the mouse to the provided coordinates and perform\n    a left-click (mouse button 1) operation.\n    Parameters:\n    x (int): The x-coordinate on the screen where the left-click operation needs to be performed.\n    y (int): The y-coordinate on the screen where the left-click operation needs to be performed.\n    \"\"\"\n    pyautogui.click(x, y)\ndef middle_click_at(x,y):\n    \"\"\"\n    This function uses the xdotool utility to move the mouse to the provided coordinates and perform",
+        "type": "code",
+        "location": "/zexui_lib/py_gui_commands.py:75-111"
+    },
+    "257": {
+        "file_id": 26,
+        "content": "This code defines functions for performing different types of mouse clicks using the xdotool utility. The click() function performs a left-click, middleClick() performs a middle-click, and rightClick() performs a right-click. Additionally, there are two other functions, left_click_at(x,y) and middle_click_at(x,y), that allow for performing left and middle clicks at specific coordinates on the screen by first moving the mouse to the given position before clicking.",
+        "type": "comment"
+    },
+    "258": {
+        "file_id": 26,
+        "content": "    a middle-click (mouse button 2) operation.\n    Parameters:\n    x (int): The x-coordinate on the screen where the middle-click operation needs to be performed.\n    y (int): The y-coordinate on the screen where the middle-click operation needs to be performed.\n    \"\"\"\n    pyautogui.middleClick(x, y)\ndef right_click_at(x,y):\n    \"\"\"\n    This function uses the xdotool utility to move the mouse to the provided coordinates and perform\n    a right-click (mouse button 3) operation.\n    Parameters:\n    x (int): The x-coordinate on the screen where the right-click operation needs to be performed.\n    y (int): The y-coordinate on the screen where the right-click operation needs to be performed.\n    \"\"\"\n    pyautogui.rightClick(x, y)\ndef mouse_move(x, y):\n    \"\"\"\n    This function uses the xdotool utility to move the mouse to the provided coordinates.\n    Parameters:\n    x (int): The x-coordinate on the screen where the mouse cursor needs to be moved.\n    y (int): The y-coordinate on the screen where the mouse cursor needs to be moved.",
+        "type": "code",
+        "location": "/zexui_lib/py_gui_commands.py:112-140"
+    },
+    "259": {
+        "file_id": 26,
+        "content": "The code defines three functions for performing different mouse operations using the xdotool utility. left_click_at() performs a left-click (mouse button 1) at specified coordinates, middle_click_at() performs a middle-click (mouse button 2), and right_click_at() performs a right-click (mouse button 3). The mouse_move() function moves the cursor to the specified coordinates using xdotool.",
+        "type": "comment"
+    },
+    "260": {
+        "file_id": 26,
+        "content": "    \"\"\"\n    # move the mouse to a specific coordinate\n    pyautogui.moveTo(x, y)\ndef scroll_up(x):\n    \"\"\"\n    Simulates scrolling up by a specified x using xdotool.\n    :param x: The x of scrolling to be done vertically (in pixels)\n    \"\"\"\n    pyautogui.scroll(x)\ndef scroll_down(x):\n    \"\"\"\n    Simulates scrolling down by a specified x using xdotool.\n    :param x: The x of scrolling to be done vertically (in pixels)\n    \"\"\"\n    pyautogui.scroll(-x)\ndef scroll_left(x):\n    \"\"\"\n    Simulates scrolling left with the mouse wheel using xdotool.\n    :param x: The x of scrolling to be done horizontally (in pixels)\n    \"\"\"\n    pyautogui.hscroll(x)\ndef scroll_right(x):\n    \"\"\"\n    Simulates scrolling right with the mouse wheel using xdotool.\n    :param x: The x of scrolling to be done horizontally (in pixels)\n    \"\"\"\n    pyautogui.hscroll(-x)\ndef wait(x):\n    if not x:\n        x = 3\n    sleep(x)\ndef mouseToggleUp(self):\n    # Get the x and y coordinates of the target object\n    x, y = self.cords[0], self.cords[1]\n    pyautogui.mouseUp(x=x, y=y, button='left')",
+        "type": "code",
+        "location": "/zexui_lib/py_gui_commands.py:141-182"
+    },
+    "261": {
+        "file_id": 26,
+        "content": "This code contains functions for mouse and scrolling movements using pyautogui, as well as a wait function with optional delay. The 'mouseToggleUp' function gets the coordinates of a target object and triggers a left mouse button up event at that location.",
+        "type": "comment"
+    },
+    "262": {
+        "file_id": 26,
+        "content": "def mouseToggleDown(self):\n    # Get the x and y coordinates of the target object\n    x, y = self.cords[0], self.cords[1]\n    pyautogui.mouseDown(x=x, y=y, button='left')",
+        "type": "code",
+        "location": "/zexui_lib/py_gui_commands.py:184-187"
+    },
+    "263": {
+        "file_id": 26,
+        "content": "This code defines a function `mouseToggleDown` that takes the x and y coordinates of an object and uses pyautogui to simulate left mouse button press at that location.",
+        "type": "comment"
+    },
+    "264": {
+        "file_id": 27,
+        "content": "/zexui_lib/x11_commands.py",
+        "type": "filepath"
+    },
+    "265": {
+        "file_id": 27,
+        "content": "The Python script uses xdotool to define functions for keyboard input and precise mouse actions, including movement, scrolling, and clicks, in a Linux environment.",
+        "type": "summary"
+    },
+    "266": {
+        "file_id": 27,
+        "content": "import subprocess\nimport re\nfrom time import sleep\ndef capture(_img):\n    # Capture the entire screen\n    subprocess.run(f\"scrot --overwrite {_img}\", shell=True)\ndef click_one(x, y):\n    \"\"\"\n    This function uses the xdotool utility to move the mouse to given x and y coordinates on the screen and\n    performs a left-click (mouse button 1) operation.\n    Parameters:\n    x (int): The x-coordinate on the screen where the left-click operation needs to be performed.\n    y (int): The y-coordinate on the screen where the left-click operation needs to be performed.\n    \"\"\"\n    # Get the current window ID\n    window = subprocess.check_output(\"xdotool getmouselocation\", shell=True)\n    wind__ = int(re.search(r'\\d+', str(window).split(\" \")[-1].strip()).group())\n    # Move the mouse to the provided x and y coordinates and perform a left click\n    subprocess.run(f\"xdotool mousemove --window {wind__} {x} {y} click 1\", shell=True)\ndef click_two(x, y):\n    \"\"\"\n    This function uses the xdotool utility to move the mouse to given x and y coordinates on the screen and",
+        "type": "code",
+        "location": "/zexui_lib/x11_commands.py:1-30"
+    },
+    "267": {
+        "file_id": 27,
+        "content": "This code imports necessary libraries and defines functions to capture a screenshot, click at specified coordinates on the screen using xdotool utility. It uses subprocess calls for execution of commands in terminal. The 'click_one' function gets current window ID and performs left-click operation at given x, y coordinates. 'click_two' function also moves mouse to given coordinates but does not perform click action.",
+        "type": "comment"
+    },
+    "268": {
+        "file_id": 27,
+        "content": "    performs a right-click (mouse button 2) operation.\n    Parameters:\n    x (int): The x-coordinate on the screen where the right-click operation needs to be performed.\n    y (int): The y-coordinate on the screen where the right-click operation needs to be performed.\n    \"\"\"\n    # Get the current window ID\n    window = subprocess.check_output(\"xdotool getmouselocation\", shell=True)\n    wind__ = int(re.search(r'\\d+', str(window).split(\" \")[-1].strip()).group())\n    # Move the mouse to the provided x and y coordinates and perform a right click\n    subprocess.run(f\"xdotool mousemove --window {wind__} {x} {y} click 2\", shell=True)\ndef write(_text, delay):\n    \"\"\"\n    This function uses the xdotool utility to simulate keyboard input and type out the provided text.\n    Parameters:\n    _text (str): The text to be typed out.\n    \"\"\"\n    if delay: \n        subprocess.run(f'xdotool type --delay 50 \"{_text}\"', shell=True)\n    else:\n        subprocess.run(f'xdotool type \"{_text}\"', shell=True)\ndef press_key(x):\n    \"\"\"",
+        "type": "code",
+        "location": "/zexui_lib/x11_commands.py:31-60"
+    },
+    "269": {
+        "file_id": 27,
+        "content": "Function \"right_click\" performs a right-click operation at specified screen coordinates using xdotool.\nFunction \"write\" types out text with optional delay between keystrokes using xdotool.\nFunction \"press_key\" presses a specific key using xdotool, without additional parameters.",
+        "type": "comment"
+    },
+    "270": {
+        "file_id": 27,
+        "content": "    This function uses the xdotool utility to simulate key presses on the keyboard.\n    Parameters:\n    x (str): The key to be press. For example, 'ctrl+v', 'ctrl+t', 'shift+tab' etc.\n    \"\"\"\n    subprocess.run(f\"xdotool key {x}\", shell=True)\ndef left_click():\n    \"\"\"\n    This function uses the xdotool utility to perform a left-click (mouse button 1) operation.\n    \"\"\"\n    subprocess.run(\"xdotool click 1\", shell=True)\ndef middle_click():\n    \"\"\"\n    This function uses the xdotool utility to perform a middle-click (mouse button 2) operation.\n    \"\"\"\n    subprocess.run(\"xdotool click 2\", shell=True)\ndef right_click():\n    \"\"\"\n    This function uses the xdotool utility to perform a right-click (mouse button 3) operation.\n    \"\"\"\n    subprocess.run(\"xdotool click 3\", shell=True)\ndef left_click_at(x,y):\n    \"\"\"\n    This function uses the xdotool utility to move the mouse to the provided coordinates and perform\n    a left-click (mouse button 1) operation.\n    Parameters:\n    x (int): The x-coordinate on the screen where the left-click operation needs to be performed.",
+        "type": "code",
+        "location": "/zexui_lib/x11_commands.py:61-100"
+    },
+    "271": {
+        "file_id": 27,
+        "content": "The code defines functions to simulate key presses and mouse clicks using the xdotool utility in a Linux environment. It uses subprocess.run() to execute commands like \"xdotool key {x}\" for keyboard input or \"xdotool click {1, 2, or 3}\" for mouse clicks. Functions are available for left/right/middle clicks and left_click_at(x, y) for precise coordinates.",
+        "type": "comment"
+    },
+    "272": {
+        "file_id": 27,
+        "content": "    y (int): The y-coordinate on the screen where the left-click operation needs to be performed.\n    \"\"\"\n    subprocess.run(f\"xdotool mousemove {x} {y} click 1\", shell=True)\ndef middle_click_at(x,y):\n    \"\"\"\n    This function uses the xdotool utility to move the mouse to the provided coordinates and perform\n    a middle-click (mouse button 2) operation.\n    Parameters:\n    x (int): The x-coordinate on the screen where the middle-click operation needs to be performed.\n    y (int): The y-coordinate on the screen where the middle-click operation needs to be performed.\n    \"\"\"\n    subprocess.run(f\"xdotool mousemove {x} {y} click 2\", shell=True)\ndef right_click_at(x,y):\n    \"\"\"\n    This function uses the xdotool utility to move the mouse to the provided coordinates and perform\n    a right-click (mouse button 3) operation.\n    Parameters:\n    x (int): The x-coordinate on the screen where the right-click operation needs to be performed.\n    y (int): The y-coordinate on the screen where the right-click operation needs to be performed.",
+        "type": "code",
+        "location": "/zexui_lib/x11_commands.py:101-127"
+    },
+    "273": {
+        "file_id": 27,
+        "content": "These functions use the xdotool utility to perform mouse operations such as left-click, middle-click, and right-click at specified coordinates on the screen. The left_click_at function performs a left-click operation at given x and y coordinates, middle_click_at performs a middle-click operation, and right_click_at performs a right-click operation. All functions use subprocess to execute the corresponding xdotool command with the provided coordinates.",
+        "type": "comment"
+    },
+    "274": {
+        "file_id": 27,
+        "content": "    \"\"\"\n    subprocess.run(f\"xdotool mousemove {x} {y} click 3\", shell=True)\ndef mouse_move(x, y):\n    \"\"\"\n    This function uses the xdotool utility to move the mouse to the provided coordinates.\n    Parameters:\n    x (int): The x-coordinate on the screen where the mouse cursor needs to be moved.\n    y (int): The y-coordinate on the screen where the mouse cursor needs to be moved.\n    \"\"\"\n    subprocess.run(f\"xdotool mousemove {x} {y}\", shell=True)\ndef scroll_up(x):\n    \"\"\"\n    Simulates scrolling up by a specified x using xdotool.\n    :param x: The x of scrolling to be done vertically (in pixels)\n    \"\"\"\n    subprocess.run(['xdotool', 'mousemove_relative', '0', f'-{x}'])\ndef scroll_down(x):\n    \"\"\"\n    Simulates scrolling down by a specified x using xdotool.\n    :param x: The x of scrolling to be done vertically (in pixels)\n    \"\"\"\n    subprocess.run(['xdotool', 'mousemove_relative', '0', f'{x}'])\ndef scroll_left(x):\n    \"\"\"\n    Simulates scrolling left with the mouse wheel using xdotool.\n    :param x: The x of scrolling to be done horizontally (in pixels)",
+        "type": "code",
+        "location": "/zexui_lib/x11_commands.py:128-162"
+    },
+    "275": {
+        "file_id": 27,
+        "content": "This code snippet contains several functions for simulating mouse and scrolling movements using the xdotool utility. The \"mouse_move\" function moves the mouse to a specific set of coordinates, while \"scroll_up\", \"scroll_down\", and \"scroll_left\" functions simulate scrolling in different directions by specifying the number of pixels. All these operations are performed using subprocess calls to execute xdotool commands.",
+        "type": "comment"
+    },
+    "276": {
+        "file_id": 27,
+        "content": "    \"\"\"\n    subprocess.run(['xdotool', 'mousemove_relative', '--', f'-{x}', '0'])\ndef scroll_right(x):\n    \"\"\"\n    Simulates scrolling right with the mouse wheel using xdotool.\n    :param x: The x of scrolling to be done horizontally (in pixels)\n    \"\"\"\n    subprocess.run(['xdotool', 'mousemove_relative', f'{x}', '0'])\ndef wait(x):\n    if not x:\n        x = 3\n    sleep(x)\ndef mouseToggleUp(self):\n    # Get the x and y coordinates of the target object\n    x, y = self.cords[0], self.cords[1]\n    mouseToggleUp(x, y)\ndef mouseToggleDown(self):\n    # Get the x and y coordinates of the target object\n    x, y = self.cords[0], self.cords[1]\n    mouseToggleDown(x, y)\n# $ xdotool click 3\n# Replace “3” with with any number from the reference below:\n# 1 – Left click\n# 2 – Middle click\n# 3 – Right click\n# 4 – Scroll wheel up\n# 5 – Scroll wheel down\n# $ xdotool mousemove 100 100 click 3",
+        "type": "code",
+        "location": "/zexui_lib/x11_commands.py:163-199"
+    },
+    "277": {
+        "file_id": 27,
+        "content": "The code is a Python script that utilizes the xdotool command-line tool to simulate various mouse actions such as movement, scrolling, and clicks. It defines functions for scrolling right with the mouse wheel, moving the mouse relative to a given position, waiting for a specified duration, and toggling the mouse up or down at a target object's coordinates. The code also explains how to use xdotool for different types of mouse actions like left click, middle click, right click, scroll wheel up, and scroll wheel down with examples.",
+        "type": "comment"
+    },
+    "278": {
+        "file_id": 28,
+        "content": "/zexui_lib/zexui.py",
+        "type": "filepath"
+    },
+    "279": {
+        "file_id": 28,
+        "content": "The code uses OpenCV for image processing, OCR, and object detection; includes functions for error handling, displaying images, detecting objects, drawing shapes, storing information, and mouse/scrolling control.",
+        "type": "summary"
+    },
+    "280": {
+        "file_id": 28,
+        "content": "# from google.colab.patches import cv2_imshow\nimport re \nimport cv2\nimport subprocess\nimport json \nimport numpy as np \nfrom vision.vision_utils import detect_component\nfrom zexui_lib.base_functions import * \nfrom time import sleep \nfrom config.CONFIG import _PLATFORM\n\"\"\"\nMain automation library that automates the device level stuffs.\n\"\"\"\nif _PLATFORM == 'windows':\n    from .py_gui_commands import * \nelif _PLATFORM == 'linux':\n    from .x11_commands import *\nclass ZexUI(object):\n    \"\"\"\n    Main ZEXUI library for the automation stuff.\n    \"\"\"\n    def __init__(self):\n        # This variable stores the path of the captured image in PNG format.\n        self.capture_png = 'data/input/curr_img.png'\n        self.img_path = \"\"    \n        self.cords = \"\"       \n        self.img_chunk = \"\"   \n        self._type_elm = \"\"   \n    def capture(self):\n        \"\"\"\n        This function captures the screenshot of the current screen and saves it\n        to the path specified by self.capture_png variable.\n        \"\"\"\n        capture(self.capture_png)",
+        "type": "code",
+        "location": "/zexui_lib/zexui.py:1-38"
+    },
+    "281": {
+        "file_id": 28,
+        "content": "Code imports necessary libraries and defines a class for the ZexUI automation library. It captures screenshots of the current screen and saves them to the specified path. The capture function is used to take screenshots.",
+        "type": "comment"
+    },
+    "282": {
+        "file_id": 28,
+        "content": "        self.img_path = self.capture_png\n    def _preprocess_img(self, _img):\n        \"\"\"\n        This function preprocesses the image by:\n        - Reading the image using OpenCV (cv2).\n        - Converting the image to grayscale.\n        - Applying thresholding to the grayscale image using Binary Inverse Thresholding.\n        - Calling `detect_component` function with input_path_img, output_root, is_ocr, and is_merge arguments,\n          and returning self.\n        Parameters:\n        _img (str): The path of the image which is to be preprocessed.\n        Returns:\n        self: The object of the class.\n        \"\"\"\n        img = cv2.imread(_img)\n        img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)\n        ret, thresh = cv2.threshold(img_gray, 150, 255, cv2.THRESH_BINARY_INV)\n        # input_path_img = 'data/input/tx_5.PNG'\n        output_root = 'data/output'\n        # detect_component(input_path_img, output_root, is_ocr=True, is_ip=False, is_merge=False)\n        return self\n    def text(self, text):\n        \"\"\"",
+        "type": "code",
+        "location": "/zexui_lib/zexui.py:39-66"
+    },
+    "283": {
+        "file_id": 28,
+        "content": "This function preprocesses the image by reading it using OpenCV, converting to grayscale, applying binary inverse thresholding, and then calling detect_component with appropriate arguments. The input is an image path, and it returns the object of the class after preprocessing.",
+        "type": "comment"
+    },
+    "284": {
+        "file_id": 28,
+        "content": "        Finds the center of the bounding box around a given text in an image.\n        Args:\n            img_path (str): Path to the input image.\n            text (str): The text to search for.\n        Returns:\n            Tuple[int, int]: The (x, y) coordinates of the center of the bounding box.\n        \"\"\"\n        # Getting latest screenshot of the screen/display\n        self.capture()\n        # Detect text components in the image using OCR.\n        input_path_img = self.img_path\n        output_root = 'data/output'\n        detect_component(input_path_img, output_root, _is_text=True, _is_element=False)\n        # Read JSON data\n        with open('data/output/ocr/curr_img.json', 'r') as f:\n            data = json.load(f)\n        # Create a white image\n        img = 255 * np.ones((200, 1900, 3), dtype=np.uint8)\n        _res = None\n        # Draw rectangles and points on the image\n        for compo in data['texts']:\n            # Removes anyn trailings spaces from the text\n            if compo['content'].lstrip() == text:",
+        "type": "code",
+        "location": "/zexui_lib/zexui.py:67-95"
+    },
+    "285": {
+        "file_id": 28,
+        "content": "This code finds the center of a bounding box around a given text in an image. It first captures the latest screenshot, then uses OCR to detect text components. The JSON data is read and a white image is created. Rectangles and points are drawn on the image for each detected text component, and if a matching text is found, its bounding box center coordinates are returned.",
+        "type": "comment"
+    },
+    "286": {
+        "file_id": 28,
+        "content": "                pt1 = (compo['column_min'], compo['row_min'])\n                pt2 = (compo['column_max'], compo['row_max'])\n                color = (0, 0, 255)  # BGR color code for red\n                thickness = 2\n                # img = cv2.rectangle(img, pt1, pt2, color, thickness)\n                center = ((compo['column_min'] + compo['column_max']) // 2,\n                        (compo['row_min'] + compo['row_max']) // 2)\n                radius = 2\n                # img = cv2.circle(img, center, radius, color, thickness=-1)\n                # print(center)\n                _res = center\n        if _res == None:\n            raise ValueError(f\"The {text} is not present in the current component\")\n        # Display the image\n        # cv2_imshow(img)\n        self.cords = _res\n        self._type_elm = 'texts'\n        return self\n    def textRegex(self, text_regex):\n        \"\"\"\n        This function performs text detection and recognition on the processed image\n        using the path specified in self.img_path. It uses `detect_component` function",
+        "type": "code",
+        "location": "/zexui_lib/zexui.py:96-122"
+    },
+    "287": {
+        "file_id": 28,
+        "content": "This code snippet is part of a computer vision application, possibly related to OCR (Optical Character Recognition) or image analysis. It detects and extracts text from an input image. The 'compo' dictionary contains parameters such as column_min, row_min, etc., which are used to identify text regions in the image. A rectangle is drawn around the detected text using cv2.rectangle function, and a circle is drawn at the center of the text using cv2.circle function. The code handles the case when no text is detected (cords == None) by raising an exception. Finally, it uses self.img_path to process the image and returns a result.",
+        "type": "comment"
+    },
+    "288": {
+        "file_id": 28,
+        "content": "        with input_path_img, output_root, is_ocr, and is_merge arguments.\n        Parameters:\n        text_regex (str): The text recognised by OCR. It is not used in the code provided.\n        Returns:\n        Text co-ordinates instance.\n        \"\"\"\n        # Getting latest screenshot of the screen/display\n        self.capture()\n        input_path_img = self.img_path\n        output_root = 'data/output'\n        detect_component(input_path_img, output_root, _is_text=True, _is_element=False)\n        # Read JSON data\n        with open('data/output/ocr/curr_img.json', 'r') as f:\n            data = json.load(f)\n        # Create a white image\n        img = 255 * np.ones((200, 1900, 3), dtype=np.uint8)\n        _res = None\n        # Draw rectangles and points on the image\n        for compo in data['texts']:\n            if re.search(text_regex, compo['content'].lstrip()):\n                pt1 = (compo['column_min'], compo['row_min'])\n                pt2 = (compo['column_max'], compo['row_max'])\n                color = (0, 0, 255)  # BGR color code for red",
+        "type": "code",
+        "location": "/zexui_lib/zexui.py:123-152"
+    },
+    "289": {
+        "file_id": 28,
+        "content": "This code captures the latest screenshot, detects text components using OCR, reads JSON data, creates a white image, and draws rectangles and points on the image for matching text components. It does not use the provided text_regex parameter.",
+        "type": "comment"
+    },
+    "290": {
+        "file_id": 28,
+        "content": "                thickness = 2\n                # img = cv2.rectangle(img, pt1, pt2, color, thickness)\n                center = ((compo['column_min'] + compo['column_max']) // 2,\n                        (compo['row_min'] + compo['row_max']) // 2)\n                radius = 2\n                # img = cv2.circle(img, center, radius, color, thickness=-1)\n                # print(center)\n                _res = center\n        if _res == None:\n            raise ValueError(f\"The {text_regex} is not present in the current component\")\n        # Display the image\n        # cv2_imshow(img)\n        self.cords = _res\n        self._type_elm = 'texts'\n        return self\n    def textContains(self, text):\n        \"\"\"\n        This function checks whether the output elements contains the text or not.\n        \"\"\"\n        # Getting latest screenshot of the screen/display\n        self.capture()\n        input_path_img = self.img_path\n        output_root = 'data/output'\n        detect_component(input_path_img, output_root, _is_text=True, _is_element=False)",
+        "type": "code",
+        "location": "/zexui_lib/zexui.py:153-182"
+    },
+    "291": {
+        "file_id": 28,
+        "content": "The code snippet initializes variables for drawing a rectangle and circle on an image, calculates the center of the component, checks if the component is present or not, displays the image, and defines a function to check whether the output elements contain the given text.",
+        "type": "comment"
+    },
+    "292": {
+        "file_id": 28,
+        "content": "        # Read JSON data\n        with open('/content/SingularGPT/data/output/ocr/curr_img.json', 'r') as f:\n            data = json.load(f)\n        # Create a white image\n        img = 255 * np.ones((200, 1900, 3), dtype=np.uint8)\n        _res = None\n        # Draw rectangles and points on the image\n        for compo in data['texts']:\n            if text in compo['content'].lstrip():\n                pt1 = (compo['column_min'], compo['row_min'])\n                pt2 = (compo['column_max'], compo['row_max'])\n                color = (0, 0, 255)  # BGR color code for red\n                thickness = 2\n                # img = cv2.rectangle(img, pt1, pt2, color, thickness)\n                center = ((compo['column_min'] + compo['column_max']) // 2,\n                        (compo['row_min'] + compo['row_max']) // 2)\n                radius = 2\n                # img = cv2.circle(img, center, radius, color, thickness=-1)\n                # print(center)\n                _res = center\n        if _res == None:\n            raise ValueError(f\"The {text} is not present in the current component\")",
+        "type": "code",
+        "location": "/zexui_lib/zexui.py:184-208"
+    },
+    "293": {
+        "file_id": 28,
+        "content": "This code reads a JSON file containing text components and checks if a specific text is present in one of them. It then draws rectangles around the found text and adds a circle at its center on an image, unless the specified text is not found in any component, in which case it raises a ValueError.",
+        "type": "comment"
+    },
+    "294": {
+        "file_id": 28,
+        "content": "        # Display the image\n        # cv2_imshow(img)\n        self.cords = _res\n        self._type_elm = 'texts'\n        return self\n    def image(self, target_img):\n        \"\"\"\n        This function takes an input target image and finds its location on the main image using the find_location_of_img_obj function. \n        It then calculates the center coordinates of the target image using its height and width. \n        The coordinates are saved in self.cords and the type of element is saved in _type_elm as compos. \n        \"\"\"\n        # input_path_img = self.img_path\n        # output_root = 'data/output'\n        # detect_component(input_path_img, output_root, is_ocr=False, is_ip=True, is_merge=False)\n        self.capture()\n        _x = find_location_of_img_obj(self.img_path, target_img)\n        _img = cv2.imread(target_img)\n        height, width, c = _img.shape\n        # center_coordinates = (x + int(width/2), y + int(height/2))    \n        # radius = 2\n        # color = (0, 78, 255)\n        # thickness = 2\n        # cv2.circle(cv2.imread(self.img_path), center_coordinates, radius, color, thickness)",
+        "type": "code",
+        "location": "/zexui_lib/zexui.py:210-237"
+    },
+    "295": {
+        "file_id": 28,
+        "content": "This code snippet finds the location of a target image on the main image and calculates its center coordinates. It saves these coordinates in self.cords and sets the type of element as 'compos'. The code does not perform any image display or save operations.",
+        "type": "comment"
+    },
+    "296": {
+        "file_id": 28,
+        "content": "        # cv2_imshow(cv2.imread(self.img_path))\n        self.cords = (_x[0] + int(width/2), _x[1] + int(height/2))\n        self._type_elm = 'compos'\n        return self\n    def get_all_objects(self, _type_elm):\n        \"\"\"\n        Returns the list of all the objects that are so far detected and saved in the ocr results json format.\n        \"\"\"\n        if _type_elm == 'texts':\n            _el_type = 'texts'\n            with open('data/output/ocr/curr_img.json', 'r') as f:\n                data = json.load(f)\n        else:\n            _el_type = 'compos'\n            input_path_img = self.img_path\n            output_root = 'data/output'\n            detect_component(input_path_img, output_root, _is_text=False, _is_element=True)\n            with open('data/output/element/curr_img.json', 'r') as f:\n                data = json.load(f)  \n        objects = []\n        objs = []\n        # Draw rectangles and points on the image\n        for compo in data[_el_type]:\n            pt1 = (compo['column_min'], compo['row_min'])",
+        "type": "code",
+        "location": "/zexui_lib/zexui.py:238-269"
+    },
+    "297": {
+        "file_id": 28,
+        "content": "This code defines a class with functions for image processing and object detection using OpenCV and JSON. The `cv2_imshow` function displays an image, while `get_all_objects` returns a list of detected objects in JSON format based on the specified element type (texts or compos). The function reads existing JSON files based on the provided image path and output root directory.",
+        "type": "comment"
+    },
+    "298": {
+        "file_id": 28,
+        "content": "            pt2 = (compo['column_max'], compo['row_max'])\n            color = (0, 0, 255)  # BGR color code for red\n            thickness = 2\n            radius = 2\n            # img = cv2.rectangle(img, pt1, pt2, color, thickness)\n            center = ((compo['column_min'] + compo['column_max']) // 2,\n                    (compo['row_min'] + compo['row_max']) // 2)\n            # img = cv2.circle(img, center, radius, color, thickness=-1)\n            objects.append(center)\n            objs.append(compo)\n        return objects, objs\n    def findLeftOf(self):\n        \"\"\"\n        This function finds the object present to the left of the target object based on\n        the coordinates of the target object `cords` and the list of objects obtained after\n        calling the `get_all_objects` method with `self._type_elm` as argument.\n        It then returns the object present to the left of the target object.\n        Returns:\n        self (object): The object present to the left of the target object returned by this method.",
+        "type": "code",
+        "location": "/zexui_lib/zexui.py:270-292"
+    },
+    "299": {
+        "file_id": 28,
+        "content": "The code defines a function that takes coordinates of an object and its dimensions, and draws a rectangle around it with the bottom-left corner as pt1, and a circle at its center. It also stores the objects' centers and their information in separate lists. The second function finds the object to the left of a target object based on its coordinates and the list of objects obtained from another method call.",
+        "type": "comment"
+    }
+}

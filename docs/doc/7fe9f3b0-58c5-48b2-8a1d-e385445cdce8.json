@@ -1,0 +1,10 @@
+{
+    "summary": "This function loads the prompt from a file named \"prompts.txt\" and returns its content as a string. The file is located two folders up, and the function reads it in UTF-8 encoding mode.",
+    "details": [
+        {
+            "comment": "This function loads the prompt from a file named \"prompts.txt\" and returns its content as a string. The file is located two folders up, and the function reads it in UTF-8 encoding mode.",
+            "location": "\"/media/root/Toshiba XG3/works/SingularGPT/docs/src/instructions_lib/fetch_commands.py\":0-5",
+            "content": "# Save your prompts on the main prompts.txt file, try to describe as brief as you can.\ndef load_prompt():\n    with open('../prompts.txt', 'r', encoding='utf-8') as f:\n        data = f.read()\n    return data"
+        }
+    ]
+}

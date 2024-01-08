@@ -1,0 +1,10 @@
+{
+    "summary": "Code interacts with the ZexUI library to perform actions on a document. It writes text, waits for specified durations, clicks images, and moves the mouse cursor. It finds and clicks an image labeled \"zx_1.PNG\" and finally closes the document.",
+    "details": [
+        {
+            "comment": "Code interacts with the ZexUI library to perform actions on a document. It writes text, waits for specified durations, clicks images, and moves the mouse cursor. It finds and clicks an image labeled \"zx_1.PNG\" and finally closes the document.",
+            "location": "\"/media/root/Toshiba XG3/works/SingularGPT/docs/src/example_generated_script.py\":0-16",
+            "content": "from zexui_lib.zexui import ZexUI\nfrom time import sleep\nzex = ZexUI()\nzex.text('Writer Document').click()\nsleep(4)\nzex.write('Hello, i am SingularGPT developed by @abhiprojectz.')\nsleep(3)\nzex.write('Now, i will find the icon you specified, and click on it for you :)')\nzex.image('/content/zx_1.PNG').click()\nsleep(3)\nzex.write('Have, you seen?')\nzex.write('Now. i will close it.')\nzex.mouseMoveTo('center')\nzex.image('/content/zx_1.PNG').click()"
+        }
+    ]
+}
