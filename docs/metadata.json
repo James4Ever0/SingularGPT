@@ -5,102 +5,102 @@
     },
     "file_mapping": {
         "0": {
-            "filepath": "/README.md",
+            "filepath": "/Prompts/prompts.txt",
             "entry_id": 0,
-            "language_id": "markdown"
-        },
-        "1": {
-            "filepath": "/SGPT_Quickstart.txt",
-            "entry_id": 14,
             "language_id": "plain-text"
         },
+        "1": {
+            "filepath": "/README.md",
+            "entry_id": 4,
+            "language_id": "markdown"
+        },
         "2": {
-            "filepath": "/example_generated_script.py",
-            "entry_id": 20,
-            "language_id": "python"
+            "filepath": "/SGPT_Quickstart.txt",
+            "entry_id": 18,
+            "language_id": "plain-text"
         },
         "3": {
-            "filepath": "/libs_installation.sh",
+            "filepath": "/component_detection/ip_region.py",
             "entry_id": 24,
-            "language_id": "shell"
+            "language_id": "python"
         },
         "4": {
-            "filepath": "/main.py",
-            "entry_id": 28,
+            "filepath": "/component_detection/lib_ip/Bbox.py",
+            "entry_id": 38,
             "language_id": "python"
         },
         "5": {
-            "filepath": "/requirements.txt",
-            "entry_id": 32,
-            "language_id": "plain-text"
+            "filepath": "/component_detection/lib_ip/Component.py",
+            "entry_id": 48,
+            "language_id": "python"
         },
         "6": {
-            "filepath": "/script.py",
-            "entry_id": 36,
+            "filepath": "/component_detection/lib_ip/file_utils.py",
+            "entry_id": 70,
             "language_id": "python"
         },
         "7": {
-            "filepath": "/Prompts/prompts.txt",
-            "entry_id": 40,
-            "language_id": "plain-text"
+            "filepath": "/component_detection/lib_ip/ip_detection.py",
+            "entry_id": 78,
+            "language_id": "python"
         },
         "8": {
-            "filepath": "/component_detection/ip_region.py",
-            "entry_id": 44,
+            "filepath": "/component_detection/lib_ip/ip_draw.py",
+            "entry_id": 128,
             "language_id": "python"
         },
         "9": {
-            "filepath": "/component_detection/lib_ip/Bbox.py",
-            "entry_id": 58,
+            "filepath": "/component_detection/lib_ip/ip_preprocessing.py",
+            "entry_id": 140,
             "language_id": "python"
         },
         "10": {
-            "filepath": "/component_detection/lib_ip/Component.py",
-            "entry_id": 68,
+            "filepath": "/config/CONFIG.py",
+            "entry_id": 146,
             "language_id": "python"
         },
         "11": {
-            "filepath": "/component_detection/lib_ip/file_utils.py",
-            "entry_id": 90,
+            "filepath": "/config/CONFIG_ZEXUI.py",
+            "entry_id": 150,
             "language_id": "python"
         },
         "12": {
-            "filepath": "/component_detection/lib_ip/ip_detection.py",
-            "entry_id": 98,
+            "filepath": "/example_generated_script.py",
+            "entry_id": 156,
             "language_id": "python"
         },
         "13": {
-            "filepath": "/component_detection/lib_ip/ip_draw.py",
-            "entry_id": 148,
-            "language_id": "python"
-        },
-        "14": {
-            "filepath": "/component_detection/lib_ip/ip_preprocessing.py",
+            "filepath": "/instructions_lib/fetch_commands.py",
             "entry_id": 160,
             "language_id": "python"
         },
-        "15": {
-            "filepath": "/config/CONFIG.py",
-            "entry_id": 166,
+        "14": {
+            "filepath": "/instructions_lib/generate_commands.py",
+            "entry_id": 164,
             "language_id": "python"
         },
-        "16": {
-            "filepath": "/config/CONFIG_ZEXUI.py",
+        "15": {
+            "filepath": "/instructions_lib/process_instructions.py",
             "entry_id": 170,
             "language_id": "python"
         },
+        "16": {
+            "filepath": "/libs_installation.sh",
+            "entry_id": 174,
+            "language_id": "shell"
+        },
         "17": {
-            "filepath": "/instructions_lib/fetch_commands.py",
-            "entry_id": 176,
+            "filepath": "/main.py",
+            "entry_id": 178,
             "language_id": "python"
         },
         "18": {
-            "filepath": "/instructions_lib/generate_commands.py",
-            "entry_id": 180,
-            "language_id": "python"
+            "filepath": "/requirements.txt",
+            "entry_id": 182,
+            "language_id": "plain-text"
         },
         "19": {
-            "filepath": "/instructions_lib/process_instructions.py",
+            "filepath": "/script.py",
             "entry_id": 186,
             "language_id": "python"
         },

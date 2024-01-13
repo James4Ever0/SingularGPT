@@ -1,539 +1,544 @@
 {
     "0": {
         "file_id": 0,
-        "content": "/README.md",
+        "content": "/Prompts/prompts.txt",
         "type": "filepath"
     },
     "1": {
         "file_id": 0,
-        "content": "SingularGPT is an open-source project combining AI vision, automation (ZexUI), and GPT for device automation via NLP instructions. It features elements detection, text detection, headless x11 server support, lightweight presets, and encourages documentation contribution.",
+        "content": "This code snippet is a request for the user to input their query in a concise manner. It mentions that due to pending document releases, patience is appreciated.",
         "type": "summary"
     },
     "2": {
         "file_id": 0,
-        "content": "**SingularGPT** is a open source project that automates your device using ChatGPT & GPT-4.\nWith 🚀 **SingularGPT** you can easily instruct your device with simple text based queries.\n[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/abhiprojectz/SingularGPT/blob/master/SGPT_Quickstart.ipynb)\n> For example: \nLet's say you need to click on button that have a text as 'File' just say it: \n**Query:** Hey, please click on the item with text File.\nIt will perform the action by processing your query, turning them to its understandable instructions and execute them.\n---\n# :star2: Demo \nhttps://user-images.githubusercontent.com/64596494/230719544-a9bee6f2-4158-4784-b0ed-260bea7be067.mp4\n---\n# :star2: How to Use ?\nYou may just run it in google colab with a GPU.\n[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/abhiprojectz/SingularGPT/blob/master/SGPT_Quickstart.ipynb)\n**Follow these steps carefully**",
-        "type": "code",
-        "location": "/README.md:2-35"
-    },
-    "3": {
-        "file_id": 0,
-        "content": "SingularGPT is an open source project that automates device tasks using ChatGPT and GPT-4. It allows users to issue simple text-based queries to instruct their devices. Demo available, use in Google Colab with a GPU, follow instructions carefully.",
-        "type": "comment"
-    },
-    "4": {
-        "file_id": 0,
-        "content": "- 1. Install all the requirements\n```\npip install -r requirements.txt\n```\nMake sure that you run this command in the same directory where the `requirements.txt` file is located.\n- 2. If you are in linux then install below libs\n```sh \n!sudo apt-get install xvfb xorg xserver-xorg scrot imagemagick x11-utils xdotool\n```\n- 3. Create a .env file and place your OPENAI_API and change your platform name in `config/CONFIG.py`\nif you are on linux set as: `_PLATFORM` as linux [By default is `windows`]\n- 4. Run this file `main.py` by passing your query.\n```py\npython main.py\n```\n- 5. Use `SingularGPT` bot if you are stuck or raise a issue\n- 6. Make sure your instructions are in `script.py` file.\n## :star2: Quickstart\nCreate a `.env` file with `OPENAI_API` and place your openai_api api there or pass as environment variable.\nPut automation scripts in `script.py` and run it.\nWrite your prompt query in `Prompts/prompts.txt` file or,\npass as a string in the `main.py` file.\n```py\n# Run the main script.\npython main.py\n```\n---\n**To visualize this see this bot on Poe**",
-        "type": "code",
-        "location": "/README.md:37-87"
-    },
-    "5": {
-        "file_id": 0,
-        "content": "This code provides a quickstart guide for using the SingularGPT bot. It explains how to install dependencies, set up environment variables, and run the main script with prompts or instructions from a file. The last line suggests checking out the bot on Poe for visualization.",
-        "type": "comment"
-    },
-    "6": {
-        "file_id": 0,
-        "content": "![](https://user-images.githubusercontent.com/64596494/230727123-b01d6607-9f08-4abe-ae00-bda1eacbc5bf.PNG)\n![djlkdj](https://user-images.githubusercontent.com/64596494/230751800-1100bfa5-f9a7-4971-9224-6f0c442b5df1.PNG)\n---\n# :star2: How it locates element ?\nThe old way using X_PATH or CSS/JS Selectors or by just co-ordinates.\n```py\nelement_xpath = driver.find_element(By.XPATH, \"//a[@href='/login']\")\nelement_xpath.click()\n# or \nelement_css = driver.find_element(By.CSS_SELECTOR, \"button.btn-primary\")\nelement_css.click()\n```\n> No, it uses the new GUI element detection techniques.\nNopes ! \n```py\nzex.text('Menu').click()\nzex.text('Edit').FindLeftOf().click() # Used to locate the element that is just left side of the target element.\n```\n---\n**Locate and perform actions to the element that is left or right or even the most nearest element to it.**\nZexUI is a standalone library that uses image processing techniques for GUI automation.\n---\n#  :star2: Automations lib apis\nHere are some methods and thier usage.\nSure! Here are the descriptions for each method:",
-        "type": "code",
-        "location": "/README.md:89-140"
-    },
-    "7": {
-        "file_id": 0,
-        "content": "ZexUI is a standalone library for GUI automation that utilizes image processing techniques. It allows locating and performing actions on elements based on their positions relative to other elements. The code snippet demonstrates using the \"text\" method to locate an element and clicking it, as well as finding the leftmost element near the target element and performing an action on it.",
-        "type": "comment"
-    },
-    "8": {
-        "file_id": 0,
-        "content": "- `text()`: This method is used to locate a text element on the webpage based on the text content provided in the query.\n- `textRegex()`: This method is used to locate a text element on the webpage based on a regular expression provided in the query.\n- `textContains()`: This method is used to locate a text element on the webpage that contains a specific word provided in the query.\n- `image()`: This method is used to locate an image element on the webpage based on the image path provided in the query.\n- `findLeftOf()`: This method is used to locate an element that is to the left of the text/image provided in the query.\n- `findRightOf()`: This method is used to locate an element that is to the right of the text/image provided in the query.\n- `findTopOf()`: This method is used to locate an element that is above the text/image provided in the query.\n- `findBottomOf()`: This method is used to locate an element that is below the text/image provided in the query.\n- `findNearestTo()`: This method is used to locate the element that is nearest to the text/image provided in the query.",
-        "type": "code",
-        "location": "/README.md:142-158"
-    },
-    "9": {
-        "file_id": 0,
-        "content": "This code describes various methods used for locating elements on a webpage based on different criteria such as text content, image path, and relative positions. These methods can be useful in web scraping, form filling, and interacting with web applications programmatically.",
-        "type": "comment"
-    },
-    "10": {
-        "file_id": 0,
-        "content": "- `click()`: This method is used to click on the element that is located using the text/image or any other method.\n- `mouseMove()`: This method is used to move the mouse to the element that is located using the text/image or any other method.\n- `scroll_up()`: This method is used to scroll up the webpage.\n- `scroll_down()`: This method is used to scroll down the webpage.\n- `scroll_left()`: This method is used to scroll left on the webpage.\n- `scroll_right()`: This method is used to scroll right on the webpage.\n... More are on the docs. \n**This is what this project aims and tries to achieve the same.**\n :star2: So, here's how the things works under the hood:\n+ Converts Natural language query to automation scripts that further can be used to achieve the task \n+ SingularGPT Process your screen, gets the required data what's being asked.\n+ Generates commands to achieve the task.\n---\n# :star2: What SingularGPT can do ?\n+ Recognize what's on your screen \n+ Even what's on your headless server using x11\n+ Can internally process them.",
-        "type": "code",
-        "location": "/README.md:160-193"
-    },
-    "11": {
-        "file_id": 0,
-        "content": "This code describes methods for interacting with a webpage, such as clicking, moving the mouse, and scrolling. The project aims to convert natural language queries into automation scripts that can be used to achieve tasks. SingularGPT processes screen data and generates commands accordingly. It recognizes content on screens and headless servers using x11.",
-        "type": "comment"
-    },
-    "12": {
-        "file_id": 0,
-        "content": "+ Build automations scripts by its own\n+ Automates your device\n---\n# :star2: Breakdown of the project\nThis projects is made possible with the help of various fields in computer science such as AI based vision, Custom libs, device automation and internal logic processing using the latest ChatGPT & GPT-4.\nIn short:\nAI computer vision + Automation (ZexUI) + GPT\n---\n# :star2: Features \n+ No crawling mechanism\n+ Elements detection\n+ Text detection\n+ Components detection based on estimates\n+ Automate your device using NLP instructions\n+ Adds-on in a very lightweight presets\n+ Works even headless on a x11 server\n# :star2: Help \nConsidering leaving a star.\n# :star2: Docs\nHelp in writing the docs for the project.\n---",
-        "type": "code",
-        "location": "/README.md:195-233"
-    },
-    "13": {
-        "file_id": 0,
-        "content": "The code describes a project utilizing AI-based vision, automation (ZexUI), and GPT to achieve device automation through NLP instructions. It includes features like no crawling mechanism, elements detection, text detection, components detection based on estimates, works headless on x11 server, lightweight presets, and encourages leaving a star and helping with project documentation.",
-        "type": "comment"
-    },
-    "14": {
-        "file_id": 1,
-        "content": "/SGPT_Quickstart.txt",
-        "type": "filepath"
-    },
-    "15": {
-        "file_id": 1,
-        "content": "The user set up libraries, cloned SingularGPT repository, and initiated process 3 for downloading highlight-pointer. They made it executable, defined a task_3 function, created multiprocessing processes, and wrote a \"prompt\" file with content \"hello click on text Writer Document\".",
-        "type": "summary"
-    },
-    "16": {
-        "file_id": 1,
-        "content": "!pip install python-xlib\n!pip install multiprocessing\n# !pip install xvfbwrapper\n!pip install pyvirtualdisplay\n!pip install pyperclip\n!sudo apt-get install xvfb xorg xserver-xorg scrot imagemagick x11-utils xdotool\n!pip install paddleocr paddlepaddle\nfrom IPython.display import HTML, display\ndef set_css():\n  display(HTML('''\n  <style>\n    pre {\n        white-space: pre-wrap;\n    }\n  </style>\n  '''))\nget_ipython().events.register('pre_run_cell', set_css)\nfrom pyvirtualdisplay import Display\ndisp = Display(size=(1536, 864), color_depth=24)\ndisp.start()\nimport os \nprint(os.environ['DISPLAY'])\n!git clone https://github.com/abhiprojectz/SingularGPT.git\n%cd SingularGPT\n%%bash \nsudo apt update\nsudo apt install tasksel\nsudo add-apt-repository ppa:libreoffice/ppa -y\nsudo apt install libreoffice\nimport multiprocessing\nimport subprocess\nfrom time import sleep\ndef task_3():\n  subprocess.run('sudo libreoffice', shell=True)\n  # subprocess.run('zenity --error --text=\"An error occurjfhgkjfnkjgnred\\!\" --title=\"Warning\\!\"', shell=True)\np3 = multiprocessing.Process(target=task_3)",
-        "type": "code",
-        "location": "/SGPT_Quickstart.txt:1-50"
-    },
-    "17": {
-        "file_id": 1,
-        "content": "Installing necessary libraries and dependencies, setting up a virtual display, cloning SingularGPT repository, and running a process to open LibreOffice.",
-        "type": "comment"
-    },
-    "18": {
-        "file_id": 1,
-        "content": "# starting process 3\np3.start()\n!wget https://github.com/swillner/highlight-pointer/releases/download/v1.1.3/highlight-pointer\n!chmod +x highlight-pointer\nimport multiprocessing\nimport subprocess\nfrom time import sleep\ndef task_3():\n  subprocess.run('./highlight-pointer', shell=True)\n  # subprocess.run('zenity --error --text=\"An error occurjfhgkjfnkjgnred\\!\" --title=\"Warning\\!\"', shell=True)\ndef ht_():\n  p3 = multiprocessing.Process(target=task_3)\n  p3.start()\n%%writefile Prompts/prompt\nhello click on text Writer Document\n!python main.py\n!python example_generated_script.py",
-        "type": "code",
-        "location": "/SGPT_Quickstart.txt:52-76"
-    },
-    "19": {
-        "file_id": 1,
-        "content": "Starting process 3, downloading highlight-pointer, making it executable, defining a function for task_3 to run the tool, creating a multiprocessing process for task_3, and writing a file named prompt with content \"hello click on text Writer Document\".",
-        "type": "comment"
-    },
-    "20": {
-        "file_id": 2,
-        "content": "/example_generated_script.py",
-        "type": "filepath"
-    },
-    "21": {
-        "file_id": 2,
-        "content": "Code interacts with the ZexUI library to perform actions on a document. It writes text, waits for specified durations, clicks images, and moves the mouse cursor. It finds and clicks an image labeled \"zx_1.PNG\" and finally closes the document.",
-        "type": "summary"
-    },
-    "22": {
-        "file_id": 2,
-        "content": "from zexui_lib.zexui import ZexUI\nfrom time import sleep\nzex = ZexUI()\nzex.text('Writer Document').click()\nsleep(4)\nzex.write('Hello, i am SingularGPT developed by @abhiprojectz.')\nsleep(3)\nzex.write('Now, i will find the icon you specified, and click on it for you :)')\nzex.image('/content/zx_1.PNG').click()\nsleep(3)\nzex.write('Have, you seen?')\nzex.write('Now. i will close it.')\nzex.mouseMoveTo('center')\nzex.image('/content/zx_1.PNG').click()",
-        "type": "code",
-        "location": "/example_generated_script.py:1-17"
-    },
-    "23": {
-        "file_id": 2,
-        "content": "Code interacts with the ZexUI library to perform actions on a document. It writes text, waits for specified durations, clicks images, and moves the mouse cursor. It finds and clicks an image labeled \"zx_1.PNG\" and finally closes the document.",
-        "type": "comment"
-    },
-    "24": {
-        "file_id": 3,
-        "content": "/libs_installation.sh",
-        "type": "filepath"
-    },
-    "25": {
-        "file_id": 3,
-        "content": "Installing required libraries and tools for image processing using apt package manager with elevated privileges.",
-        "type": "summary"
-    },
-    "26": {
-        "file_id": 3,
-        "content": "#!/bin/bash \nsudo apt install scrot xvfb xorg xserver-xorg scrot imagemagick x11-utils xdotool imagemagick",
-        "type": "code",
-        "location": "/libs_installation.sh:1-3"
-    },
-    "27": {
-        "file_id": 3,
-        "content": "Installing required libraries and tools for image processing using apt package manager with elevated privileges.",
-        "type": "comment"
-    },
-    "28": {
-        "file_id": 4,
-        "content": "/main.py",
-        "type": "filepath"
-    },
-    "29": {
-        "file_id": 4,
-        "content": "The code imports functions from two different libraries, generates commands based on a prompt, generates a script from those commands, and then runs the script using subprocess. It also has an unused execute_commands function call at the end.",
-        "type": "summary"
-    },
-    "30": {
-        "file_id": 4,
-        "content": "from instructions_lib.generate_commands import generate, execute_commands\nfrom instructions_lib.process_instructions import generate_script, execute_commands \nimport subprocess \n_prompt = 'Query: click on the item with text \"Document Writer\" after that click on the image with path \"image.png\" after that scroll down and then find element that is top of text \"File\" , double left click it.'\ncommands = generate(_prompt)\ngenerate_script(commands)\nsubprocess.run('python script.py', shell=True)\n# execute_commands(commands)",
-        "type": "code",
-        "location": "/main.py:1-14"
-    },
-    "31": {
-        "file_id": 4,
-        "content": "The code imports functions from two different libraries, generates commands based on a prompt, generates a script from those commands, and then runs the script using subprocess. It also has an unused execute_commands function call at the end.",
-        "type": "comment"
-    },
-    "32": {
-        "file_id": 5,
-        "content": "/requirements.txt",
-        "type": "filepath"
-    },
-    "33": {
-        "file_id": 5,
-        "content": "The code represents a list of dependencies for a Python project. These include: PaddleOCR for optical character recognition, OpenCV for image processing, Google Cloud Vision API client, NumPy for numerical computations, Matplotlib for data visualization, Xlib for interface with the X Window System, and PyVirtualDisplay for running virtual displays.",
-        "type": "summary"
-    },
-    "34": {
-        "file_id": 5,
-        "content": "paddleocr\nopencv-python-headless\ngoogle-cloud-vision\nnumpy\nmatplotlib\npython-xlib\npyvirtualdisplay",
-        "type": "code",
-        "location": "/requirements.txt:1-7"
-    },
-    "35": {
-        "file_id": 5,
-        "content": "The code represents a list of dependencies for a Python project. These include: PaddleOCR for optical character recognition, OpenCV for image processing, Google Cloud Vision API client, NumPy for numerical computations, Matplotlib for data visualization, Xlib for interface with the X Window System, and PyVirtualDisplay for running virtual displays.",
-        "type": "comment"
-    },
-    "36": {
-        "file_id": 6,
-        "content": "/script.py",
-        "type": "filepath"
-    },
-    "37": {
-        "file_id": 6,
-        "content": "The code is importing the ZexUI module from zexui_lib and creating an instance of it named \"zex\". The script then uses this instance to click on an image named \"tx_5.PNG\" located at \"C:\\Users\\abhis\\Desktop\\\", though scrolling down may be required beforehand, followed by finding the text 'File' and double-left clicking on it using the zex instance.",
-        "type": "summary"
-    },
-    "38": {
-        "file_id": 6,
-        "content": "from zexui_lib.zexui import ZexUI\n# import zexui_lib.zexui\nzex = ZexUI()\n# zex.text('Document Writer').click()\nzex.image(r\"C:\\\\Users\\\\abhis\\\\Desktop\\\\tx_5.PNG\").click()\n# scroll_down()\n# zex.text('File').findTopOf().mouseDoubleLeftClick()",
-        "type": "code",
-        "location": "/script.py:1-7"
-    },
-    "39": {
-        "file_id": 6,
-        "content": "The code is importing the ZexUI module from zexui_lib and creating an instance of it named \"zex\". The script then uses this instance to click on an image named \"tx_5.PNG\" located at \"C:\\Users\\abhis\\Desktop\\\", though scrolling down may be required beforehand, followed by finding the text 'File' and double-left clicking on it using the zex instance.",
-        "type": "comment"
-    },
-    "40": {
-        "file_id": 7,
-        "content": "/Prompts/prompts.txt",
-        "type": "filepath"
-    },
-    "41": {
-        "file_id": 7,
-        "content": "This code snippet is a request for the user to input their query in a concise manner. It mentions that due to pending document releases, patience is appreciated.",
-        "type": "summary"
-    },
-    "42": {
-        "file_id": 7,
         "content": "Put here your query , be as brief as you can, till docs is released be patient please...",
         "type": "code",
         "location": "/Prompts/prompts.txt:1-1"
     },
-    "43": {
-        "file_id": 7,
+    "3": {
+        "file_id": 0,
         "content": "This code snippet is a request for the user to input their query in a concise manner. It mentions that due to pending document releases, patience is appreciated.",
         "type": "comment"
     },
-    "44": {
-        "file_id": 8,
+    "4": {
+        "file_id": 1,
+        "content": "/README.md",
+        "type": "filepath"
+    },
+    "5": {
+        "file_id": 1,
+        "content": "SingularGPT is an open-source project combining AI vision, automation (ZexUI), and GPT for device automation via NLP instructions. It features elements detection, text detection, headless x11 server support, lightweight presets, and encourages documentation contribution.",
+        "type": "summary"
+    },
+    "6": {
+        "file_id": 1,
+        "content": "**SingularGPT** is a open source project that automates your device using ChatGPT & GPT-4.\nWith 🚀 **SingularGPT** you can easily instruct your device with simple text based queries.\n[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/abhiprojectz/SingularGPT/blob/master/SGPT_Quickstart.ipynb)\n> For example: \nLet's say you need to click on button that have a text as 'File' just say it: \n**Query:** Hey, please click on the item with text File.\nIt will perform the action by processing your query, turning them to its understandable instructions and execute them.\n---\n# :star2: Demo \nhttps://user-images.githubusercontent.com/64596494/230719544-a9bee6f2-4158-4784-b0ed-260bea7be067.mp4\n---\n# :star2: How to Use ?\nYou may just run it in google colab with a GPU.\n[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/abhiprojectz/SingularGPT/blob/master/SGPT_Quickstart.ipynb)\n**Follow these steps carefully**",
+        "type": "code",
+        "location": "/README.md:2-35"
+    },
+    "7": {
+        "file_id": 1,
+        "content": "SingularGPT is an open source project that automates device tasks using ChatGPT and GPT-4. It allows users to issue simple text-based queries to instruct their devices. Demo available, use in Google Colab with a GPU, follow instructions carefully.",
+        "type": "comment"
+    },
+    "8": {
+        "file_id": 1,
+        "content": "- 1. Install all the requirements\n```\npip install -r requirements.txt\n```\nMake sure that you run this command in the same directory where the `requirements.txt` file is located.\n- 2. If you are in linux then install below libs\n```sh \n!sudo apt-get install xvfb xorg xserver-xorg scrot imagemagick x11-utils xdotool\n```\n- 3. Create a .env file and place your OPENAI_API and change your platform name in `config/CONFIG.py`\nif you are on linux set as: `_PLATFORM` as linux [By default is `windows`]\n- 4. Run this file `main.py` by passing your query.\n```py\npython main.py\n```\n- 5. Use `SingularGPT` bot if you are stuck or raise a issue\n- 6. Make sure your instructions are in `script.py` file.\n## :star2: Quickstart\nCreate a `.env` file with `OPENAI_API` and place your openai_api api there or pass as environment variable.\nPut automation scripts in `script.py` and run it.\nWrite your prompt query in `Prompts/prompts.txt` file or,\npass as a string in the `main.py` file.\n```py\n# Run the main script.\npython main.py\n```\n---\n**To visualize this see this bot on Poe**",
+        "type": "code",
+        "location": "/README.md:37-87"
+    },
+    "9": {
+        "file_id": 1,
+        "content": "This code provides a quickstart guide for using the SingularGPT bot. It explains how to install dependencies, set up environment variables, and run the main script with prompts or instructions from a file. The last line suggests checking out the bot on Poe for visualization.",
+        "type": "comment"
+    },
+    "10": {
+        "file_id": 1,
+        "content": "![](https://user-images.githubusercontent.com/64596494/230727123-b01d6607-9f08-4abe-ae00-bda1eacbc5bf.PNG)\n![djlkdj](https://user-images.githubusercontent.com/64596494/230751800-1100bfa5-f9a7-4971-9224-6f0c442b5df1.PNG)\n---\n# :star2: How it locates element ?\nThe old way using X_PATH or CSS/JS Selectors or by just co-ordinates.\n```py\nelement_xpath = driver.find_element(By.XPATH, \"//a[@href='/login']\")\nelement_xpath.click()\n# or \nelement_css = driver.find_element(By.CSS_SELECTOR, \"button.btn-primary\")\nelement_css.click()\n```\n> No, it uses the new GUI element detection techniques.\nNopes ! \n```py\nzex.text('Menu').click()\nzex.text('Edit').FindLeftOf().click() # Used to locate the element that is just left side of the target element.\n```\n---\n**Locate and perform actions to the element that is left or right or even the most nearest element to it.**\nZexUI is a standalone library that uses image processing techniques for GUI automation.\n---\n#  :star2: Automations lib apis\nHere are some methods and thier usage.\nSure! Here are the descriptions for each method:",
+        "type": "code",
+        "location": "/README.md:89-140"
+    },
+    "11": {
+        "file_id": 1,
+        "content": "ZexUI is a standalone library for GUI automation that utilizes image processing techniques. It allows locating and performing actions on elements based on their positions relative to other elements. The code snippet demonstrates using the \"text\" method to locate an element and clicking it, as well as finding the leftmost element near the target element and performing an action on it.",
+        "type": "comment"
+    },
+    "12": {
+        "file_id": 1,
+        "content": "- `text()`: This method is used to locate a text element on the webpage based on the text content provided in the query.\n- `textRegex()`: This method is used to locate a text element on the webpage based on a regular expression provided in the query.\n- `textContains()`: This method is used to locate a text element on the webpage that contains a specific word provided in the query.\n- `image()`: This method is used to locate an image element on the webpage based on the image path provided in the query.\n- `findLeftOf()`: This method is used to locate an element that is to the left of the text/image provided in the query.\n- `findRightOf()`: This method is used to locate an element that is to the right of the text/image provided in the query.\n- `findTopOf()`: This method is used to locate an element that is above the text/image provided in the query.\n- `findBottomOf()`: This method is used to locate an element that is below the text/image provided in the query.\n- `findNearestTo()`: This method is used to locate the element that is nearest to the text/image provided in the query.",
+        "type": "code",
+        "location": "/README.md:142-158"
+    },
+    "13": {
+        "file_id": 1,
+        "content": "This code describes various methods used for locating elements on a webpage based on different criteria such as text content, image path, and relative positions. These methods can be useful in web scraping, form filling, and interacting with web applications programmatically.",
+        "type": "comment"
+    },
+    "14": {
+        "file_id": 1,
+        "content": "- `click()`: This method is used to click on the element that is located using the text/image or any other method.\n- `mouseMove()`: This method is used to move the mouse to the element that is located using the text/image or any other method.\n- `scroll_up()`: This method is used to scroll up the webpage.\n- `scroll_down()`: This method is used to scroll down the webpage.\n- `scroll_left()`: This method is used to scroll left on the webpage.\n- `scroll_right()`: This method is used to scroll right on the webpage.\n... More are on the docs. \n**This is what this project aims and tries to achieve the same.**\n :star2: So, here's how the things works under the hood:\n+ Converts Natural language query to automation scripts that further can be used to achieve the task \n+ SingularGPT Process your screen, gets the required data what's being asked.\n+ Generates commands to achieve the task.\n---\n# :star2: What SingularGPT can do ?\n+ Recognize what's on your screen \n+ Even what's on your headless server using x11\n+ Can internally process them.",
+        "type": "code",
+        "location": "/README.md:160-193"
+    },
+    "15": {
+        "file_id": 1,
+        "content": "This code describes methods for interacting with a webpage, such as clicking, moving the mouse, and scrolling. The project aims to convert natural language queries into automation scripts that can be used to achieve tasks. SingularGPT processes screen data and generates commands accordingly. It recognizes content on screens and headless servers using x11.",
+        "type": "comment"
+    },
+    "16": {
+        "file_id": 1,
+        "content": "+ Build automations scripts by its own\n+ Automates your device\n---\n# :star2: Breakdown of the project\nThis projects is made possible with the help of various fields in computer science such as AI based vision, Custom libs, device automation and internal logic processing using the latest ChatGPT & GPT-4.\nIn short:\nAI computer vision + Automation (ZexUI) + GPT\n---\n# :star2: Features \n+ No crawling mechanism\n+ Elements detection\n+ Text detection\n+ Components detection based on estimates\n+ Automate your device using NLP instructions\n+ Adds-on in a very lightweight presets\n+ Works even headless on a x11 server\n# :star2: Help \nConsidering leaving a star.\n# :star2: Docs\nHelp in writing the docs for the project.\n---",
+        "type": "code",
+        "location": "/README.md:195-233"
+    },
+    "17": {
+        "file_id": 1,
+        "content": "The code describes a project utilizing AI-based vision, automation (ZexUI), and GPT to achieve device automation through NLP instructions. It includes features like no crawling mechanism, elements detection, text detection, components detection based on estimates, works headless on x11 server, lightweight presets, and encourages leaving a star and helping with project documentation.",
+        "type": "comment"
+    },
+    "18": {
+        "file_id": 2,
+        "content": "/SGPT_Quickstart.txt",
+        "type": "filepath"
+    },
+    "19": {
+        "file_id": 2,
+        "content": "The user set up libraries, cloned SingularGPT repository, and initiated process 3 for downloading highlight-pointer. They made it executable, defined a task_3 function, created multiprocessing processes, and wrote a \"prompt\" file with content \"hello click on text Writer Document\".",
+        "type": "summary"
+    },
+    "20": {
+        "file_id": 2,
+        "content": "!pip install python-xlib\n!pip install multiprocessing\n# !pip install xvfbwrapper\n!pip install pyvirtualdisplay\n!pip install pyperclip\n!sudo apt-get install xvfb xorg xserver-xorg scrot imagemagick x11-utils xdotool\n!pip install paddleocr paddlepaddle\nfrom IPython.display import HTML, display\ndef set_css():\n  display(HTML('''\n  <style>\n    pre {\n        white-space: pre-wrap;\n    }\n  </style>\n  '''))\nget_ipython().events.register('pre_run_cell', set_css)\nfrom pyvirtualdisplay import Display\ndisp = Display(size=(1536, 864), color_depth=24)\ndisp.start()\nimport os \nprint(os.environ['DISPLAY'])\n!git clone https://github.com/abhiprojectz/SingularGPT.git\n%cd SingularGPT\n%%bash \nsudo apt update\nsudo apt install tasksel\nsudo add-apt-repository ppa:libreoffice/ppa -y\nsudo apt install libreoffice\nimport multiprocessing\nimport subprocess\nfrom time import sleep\ndef task_3():\n  subprocess.run('sudo libreoffice', shell=True)\n  # subprocess.run('zenity --error --text=\"An error occurjfhgkjfnkjgnred\\!\" --title=\"Warning\\!\"', shell=True)\np3 = multiprocessing.Process(target=task_3)",
+        "type": "code",
+        "location": "/SGPT_Quickstart.txt:1-50"
+    },
+    "21": {
+        "file_id": 2,
+        "content": "Installing necessary libraries and dependencies, setting up a virtual display, cloning SingularGPT repository, and running a process to open LibreOffice.",
+        "type": "comment"
+    },
+    "22": {
+        "file_id": 2,
+        "content": "# starting process 3\np3.start()\n!wget https://github.com/swillner/highlight-pointer/releases/download/v1.1.3/highlight-pointer\n!chmod +x highlight-pointer\nimport multiprocessing\nimport subprocess\nfrom time import sleep\ndef task_3():\n  subprocess.run('./highlight-pointer', shell=True)\n  # subprocess.run('zenity --error --text=\"An error occurjfhgkjfnkjgnred\\!\" --title=\"Warning\\!\"', shell=True)\ndef ht_():\n  p3 = multiprocessing.Process(target=task_3)\n  p3.start()\n%%writefile Prompts/prompt\nhello click on text Writer Document\n!python main.py\n!python example_generated_script.py",
+        "type": "code",
+        "location": "/SGPT_Quickstart.txt:52-76"
+    },
+    "23": {
+        "file_id": 2,
+        "content": "Starting process 3, downloading highlight-pointer, making it executable, defining a function for task_3 to run the tool, creating a multiprocessing process for task_3, and writing a file named prompt with content \"hello click on text Writer Document\".",
+        "type": "comment"
+    },
+    "24": {
+        "file_id": 3,
         "content": "/component_detection/ip_region.py",
         "type": "filepath"
     },
-    "45": {
-        "file_id": 8,
+    "25": {
+        "file_id": 3,
         "content": "The code detects and preprocesses UI components in an image, identifies elements, refines results, checks nesting, updates compositions, draws bounding boxes, saves detection result in a JSON file, and displays elapsed time and output file path.",
         "type": "summary"
     },
-    "46": {
-        "file_id": 8,
+    "26": {
+        "file_id": 3,
         "content": "import cv2\nfrom os.path import join as pjoin\nimport time\nimport json\nimport numpy as np\nimport component_detection.lib_ip.ip_preprocessing as pre\nimport component_detection.lib_ip.ip_draw as draw\nimport component_detection.lib_ip.ip_detection as det\nimport component_detection.lib_ip.file_utils as file\nimport component_detection.lib_ip.Component as Compo\ndef nesting_inspection(org, grey, compos, ffl_block):\n    '''\n    Inspect all big compos through block division by flood-fill\n    :param ffl_block: gradient threshold for flood-fill\n    :return: nesting compos\n    '''\n    nesting_compos = []\n    for compo in compos:\n        replace, n_compos = inspect_compo(org, grey, compo, ffl_block)\n        if not replace:\n            nesting_compos += n_compos\n    return nesting_compos\ndef inspect_compo(org, grey, compo, ffl_block):\n    '''\n    Inspect a single component and detect its nested components\n    :return: a tuple of two elements (replace, n_compos)\n    replace: whether the component has redundant nested components\n    n_compos: a list of nested components",
         "type": "code",
         "location": "/component_detection/ip_region.py:1-35"
     },
-    "47": {
-        "file_id": 8,
+    "27": {
+        "file_id": 3,
         "content": "The code contains two functions: `nesting_inspection` and `inspect_compo`. The former inspects all big components through block division using flood-fill, while the latter inspects a single component and detects its nested components. It returns a tuple containing whether the component has redundant nested components and a list of nested components.",
         "type": "comment"
     },
-    "48": {
-        "file_id": 8,
+    "28": {
+        "file_id": 3,
         "content": "    '''\n    replace = False\n    n_compos = []\n    if compo.height > 50:\n        clip_grey = compo.compo_clipping(grey)\n        n_compos = detect_nested_components(org, clip_grey, compo.bbox.col_min, compo.bbox.row_min, ffl_block)\n        replace = check_for_redundant_components(compo, n_compos)\n    return replace, n_compos\ndef detect_nested_components(org, clip_grey, col_min, row_min, grad_thresh):\n    '''\n    Detect nested components inside a component\n    :return: a list of nested components\n    '''\n    n_compos = det.nested_components_detection(clip_grey, org, grad_thresh=grad_thresh)\n    Compo.cvt_compos_relative_pos(n_compos, col_min, row_min)\n    return n_compos\ndef check_for_redundant_components(compo, n_compos):\n    '''\n    Check if any of the nested components are redundant\n    :return: a boolean value representing whether the component has redundant nested components or not\n    '''\n    for n_compo in n_compos:\n        if n_compo.redundant:\n            compo.update(n_compo)\n            return True\n    return False",
         "type": "code",
         "location": "/component_detection/ip_region.py:36-67"
     },
-    "49": {
-        "file_id": 8,
+    "29": {
+        "file_id": 3,
         "content": "The code defines three functions: 'replace', 'detect_nested_components', and 'check_for_redundant_components'. The first function checks if a component's height is greater than 50, then calls the other two functions. The second function detects nested components inside a given component using clipping and gray scale image processing. The third function checks if any of the detected nested components are redundant and returns a boolean value.",
         "type": "comment"
     },
-    "50": {
-        "file_id": 8,
+    "30": {
+        "file_id": 3,
         "content": "# Pre-processing\ndef preprocess_image(input_img_path: str, resize_by_height: int, zexui_params):\n    \"\"\"\n    Pre-processes the input image by reading it, converting it to grayscale, and binarizing it.\n    Args:\n    - input_img_path (str): Path to the input image\n    - resize_by_height (int): Height to resize the input image to\n    - zexui_params (Dict): Dictionary of parameters for the pre-processing steps\n    Returns:\n    - Tuple of (original image, grayscale image, binarized image)\n    \"\"\"\n    # Read the input image and convert it to grayscale\n    org, grey = pre.read_img(input_img_path, resize_by_height)\n    # Binarize the grayscale image\n    binary = pre.binarization(org, grad_min=int(zexui_params['min-grad']))\n    return org, grey, binary\n# Element detection\ndef detect_elements(binary: np.ndarray, zexui_params):\n    \"\"\"\n    Detects UI elements from the binarized image.\n    Args:\n    - binary (np.ndarray): Binarized image\n    - zexui_params (Dict): Dictionary of parameters for the element detection step\n    Returns:",
         "type": "code",
         "location": "/component_detection/ip_region.py:70-100"
     },
-    "51": {
-        "file_id": 8,
+    "31": {
+        "file_id": 3,
         "content": "The code contains two functions: \"preprocess_image\" and \"detect_elements\". The preprocess_image function reads an input image, converts it to grayscale, and binarizes it using parameters from the zexui_params dictionary. The detect_elements function takes the binarized image as input and uses additional parameters from zexui_params to detect UI elements in the image.",
         "type": "comment"
     },
-    "52": {
-        "file_id": 8,
+    "32": {
+        "file_id": 3,
         "content": "    - List of Compo objects representing the detected UI elements\n    \"\"\"\n    # Remove lines from the binarized image\n    det.rm_line(binary)\n    # Detect components from the binarized image\n    uicompos = det.component_detection(binary, min_obj_area=int(zexui_params['min-ele-area']))\n    return uicompos\n# Refinement\ndef refine_results(uicompos, org, binary, zexui_params):\n    # Filter out components smaller than a certain minimum area\n    uicompos = det.compo_filter(uicompos, min_area=int(zexui_params['min-ele-area']), img_shape=binary.shape)\n    # Merge intersecting components\n    uicompos = det.merge_intersected_compos(uicompos)\n    # Recognize components that form a block\n    det.compo_block_recognition(binary, uicompos)\n    # Merge contained components that are not part of a block\n    if zexui_params['merge-contained-ele']:\n        uicompos = det.remove_contained_non_block_components(uicompos)\n    # Update component information, including their size, position, and containment hierarchy\n    Compo.compos_update(uicompos, org.shape)",
         "type": "code",
         "location": "/component_detection/ip_region.py:101-128"
     },
-    "53": {
-        "file_id": 8,
+    "33": {
+        "file_id": 3,
         "content": "This code snippet is for component detection and refinement in an UI element recognition process. The code filters out small components, merges intersecting ones, recognizes blocks, removes contained non-block elements, and updates component information based on the organization shape.",
         "type": "comment"
     },
-    "54": {
-        "file_id": 8,
+    "34": {
+        "file_id": 3,
         "content": "    Compo.compos_containment(uicompos)\n    # Return the updated component list\n    return uicompos\n# Component detection\ndef compo_detection(input_img_path, output_root, zexui_params, resize_by_height):\n    start = time.process_time()\n    name = input_img_path.split('/')[-1][:-4] if '/' in input_img_path else input_img_path.split('\\\\')[-1][:-4]\n    ip_root = file.build_directory(pjoin(output_root, \"element\"))\n    # Pre-processing\n    org, grey, binary = preprocess_image(input_img_path, resize_by_height, zexui_params)\n    # Element detection\n    uicompos = detect_elements(binary, zexui_params)\n    # Refinement\n    uicompos = refine_results(uicompos, org, binary, zexui_params)\n    # Nesting inspection\n    uicompos += nesting_inspection(org, grey, uicompos, ffl_block=zexui_params['ffl-block'])\n    Compo.compos_update(uicompos, org.shape)\n    # Draw bounding box and save detection result\n    draw.draw_bounding_box(org, uicompos, name='merged compo', write_path=pjoin(ip_root, name + '.jpg'))\n    Compo.compos_update(uicompos, org.shape)",
         "type": "code",
         "location": "/component_detection/ip_region.py:129-156"
     },
-    "55": {
-        "file_id": 8,
+    "35": {
+        "file_id": 3,
         "content": "The code performs component detection on an input image, pre-processes the image, detects elements, refines results, inspects nesting, updates compositions, draws bounding boxes, and saves the detection result.",
         "type": "comment"
     },
-    "56": {
-        "file_id": 8,
+    "36": {
+        "file_id": 3,
         "content": "    file.save_corners_json(pjoin(ip_root, name + '.json'), uicompos)\n    # calculate the elapsed time of the compositional detection process\n    elapsed_time = time.process_time() - start\n    print(f\"[Component Detection Completed in {elapsed_time:.3f} seconds.]\\nOutput JSON file path: {pjoin(ip_root, name + '.json')}\")",
         "type": "code",
         "location": "/component_detection/ip_region.py:157-162"
     },
-    "57": {
-        "file_id": 8,
+    "37": {
+        "file_id": 3,
         "content": "Saves the corners JSON file and prints elapsed time and output JSON file path for component detection process completion.",
         "type": "comment"
     },
-    "58": {
-        "file_id": 9,
+    "38": {
+        "file_id": 4,
         "content": "/component_detection/lib_ip/Bbox.py",
         "type": "filepath"
     },
-    "59": {
-        "file_id": 9,
+    "39": {
+        "file_id": 4,
         "content": "The code defines a Bbox class for image processing tasks, calculates bounding box area and coordinates, uses NMS to compare relationships, and determines IoU between two boxes.",
         "type": "summary"
     },
-    "60": {
-        "file_id": 9,
+    "40": {
+        "file_id": 4,
         "content": "import numpy as np\nimport component_detection.lib_ip.ip_draw as draw\nclass Bbox:\n    def __init__(self, col_min, row_min, col_max, row_max):\n        self.col_min = col_min\n        self.row_min = row_min\n        self.col_max = col_max\n        self.row_max = row_max\n        self.width = col_max - col_min\n        self.height = row_max - row_min\n        self.box_area = self.width * self.height\n    def put_bbox(self):\n        return self.col_min, self.row_min, self.col_max, self.row_max\n    def bbox_cal_area(self):\n        self.box_area = self.width * self.height\n        return self.box_area\n    def bbox_relation(self, bbox_b):\n        \"\"\"\n        :return: -1 : a in b\n                 0  : a, b are not intersected\n                 1  : b in a\n                 2  : a, b are identical or intersected\n        \"\"\"\n        col_min_a, row_min_a, col_max_a, row_max_a = self.put_bbox()\n        col_min_b, row_min_b, col_max_b, row_max_b = bbox_b.put_bbox()\n        # if a is in b\n        if col_min_a > col_min_b and row_min_a > row_min_b and col_max_a < col_max_b and row_max_a < row_max_b:",
         "type": "code",
         "location": "/component_detection/lib_ip/Bbox.py:1-34"
     },
-    "61": {
-        "file_id": 9,
+    "41": {
+        "file_id": 4,
         "content": "This code defines a Bbox class with attributes representing the minimum and maximum column and row values of a bounding box. It also provides methods to calculate the bounding box area, put the bounding box coordinates, and compare two bounding boxes for their relationship.",
         "type": "comment"
     },
-    "62": {
-        "file_id": 9,
+    "42": {
+        "file_id": 4,
         "content": "            return -1\n        # if b is in a\n        elif col_min_a < col_min_b and row_min_a < row_min_b and col_max_a > col_max_b and row_max_a > row_max_b:\n            return 1\n        # a and b are non-intersect\n        elif (col_min_a > col_max_b or row_min_a > row_max_b) or (col_min_b > col_max_a or row_min_b > row_max_a):\n            return 0\n        # intersection\n        else:\n            return 2\n    def bbox_relation_nms(self, bbox_b, bias=(0, 0)):\n        '''\n        Calculate the relation between two rectangles by nms\n       :return: -1 : a in b\n         0  : a, b are not intersected\n         1  : b in a\n         2  : a, b are intersected\n       '''\n        col_min_a, row_min_a, col_max_a, row_max_a = self.put_bbox()\n        col_min_b, row_min_b, col_max_b, row_max_b = bbox_b.put_bbox()\n        bias_col, bias_row = bias\n        # get the intersected area\n        col_min_s = max(col_min_a - bias_col, col_min_b - bias_col)\n        row_min_s = max(row_min_a - bias_row, row_min_b - bias_row)\n        col_max_s = min(col_max_a + bias_col, col_max_b + bias_col)",
         "type": "code",
         "location": "/component_detection/lib_ip/Bbox.py:35-61"
     },
-    "63": {
-        "file_id": 9,
+    "43": {
+        "file_id": 4,
         "content": "This code calculates the relationship between two rectangles using non-maximum suppression (NMS). It returns -1 if bbox_b is entirely inside bbox_a, 0 if they are not intersected, 1 if bbox_a is entirely inside bbox_b, and 2 if they are intersected. The function uses the put_bbox() method to extract the coordinates of each rectangle and adjusts them with a bias before calculating the intersection area.",
         "type": "comment"
     },
-    "64": {
-        "file_id": 9,
+    "44": {
+        "file_id": 4,
         "content": "        row_max_s = min(row_max_a + bias_row, row_max_b + bias_row)\n        w = np.maximum(0, col_max_s - col_min_s)\n        h = np.maximum(0, row_max_s - row_min_s)\n        inter = w * h\n        area_a = (col_max_a - col_min_a) * (row_max_a - row_min_a)\n        area_b = (col_max_b - col_min_b) * (row_max_b - row_min_b)\n        iou = inter / (area_a + area_b - inter)\n        ioa = inter / self.box_area\n        iob = inter / bbox_b.box_area\n        if iou == 0 and ioa == 0 and iob == 0:\n            return 0\n        # contained by b\n        if ioa >= 1:\n            return -1\n        # contains b\n        if iob >= 1:\n            return 1\n        # not intersected with each other\n        # intersected\n        if iou >= 0.02 or iob > 0.2 or ioa > 0.2:\n            return 2\n        # if iou == 0:\n        # print('ioa:%.5f; iob:%.5f; iou:%.5f' % (ioa, iob, iou))\n        return 0\n    def bbox_cvt_relative_position(self, col_min_base, row_min_base):\n        '''\n        Convert to relative position based on base coordinator",
         "type": "code",
         "location": "/component_detection/lib_ip/Bbox.py:62-91"
     },
-    "65": {
-        "file_id": 9,
+    "45": {
+        "file_id": 4,
         "content": "This code calculates the intersection over union (IoU) between two bounding boxes. If the IoU is 0, it returns 0. If one box is fully contained in the other, it returns -1 or 1 respectively. If the boxes intersect with a certain threshold, it returns 2. The function also converts the bounding box to a relative position based on a base coordinator.",
         "type": "comment"
     },
-    "66": {
-        "file_id": 9,
+    "46": {
+        "file_id": 4,
         "content": "        '''\n        self.col_min += col_min_base\n        self.col_max += col_min_base\n        self.row_min += row_min_base\n        self.row_max += row_min_base\n    def bbox_merge(self, bbox_b):\n        '''\n        Merge two intersected bboxes\n        '''\n        col_min_a, row_min_a, col_max_a, row_max_a = self.put_bbox()\n        col_min_b, row_min_b, col_max_b, row_max_b = bbox_b.put_bbox()\n        col_min = min(col_min_a, col_min_b)\n        col_max = max(col_max_a, col_max_b)\n        row_min = min(row_min_a, row_min_b)\n        row_max = max(row_max_a, row_max_b)\n        new_bbox = Bbox(col_min, row_min, col_max, row_max)\n        return new_bbox\n    def bbox_padding(self, image_shape, pad):\n        row, col = image_shape[:2]\n        self.col_min = max(self.col_min - pad, 0)\n        self.col_max = min(self.col_max + pad, col)\n        self.row_min = max(self.row_min - pad, 0)\n        self.row_max = min(self.row_max + pad, row)",
         "type": "code",
         "location": "/component_detection/lib_ip/Bbox.py:92-116"
     },
-    "67": {
-        "file_id": 9,
+    "47": {
+        "file_id": 4,
         "content": "The code defines a Bbox class with attributes for column and row min/max values. It includes methods to merge two intersected bboxes, update bbox padding based on image shape and padding, and puts the bbox coordinates into variables. The main purpose is likely to manipulate and combine bounding boxes in an image processing task.",
         "type": "comment"
     },
-    "68": {
-        "file_id": 10,
+    "48": {
+        "file_id": 5,
         "content": "/component_detection/lib_ip/Component.py",
         "type": "filepath"
     },
-    "69": {
-        "file_id": 10,
+    "49": {
+        "file_id": 5,
         "content": "The code develops a component class for detecting rectangular shapes and identifying lines in images, incorporating methods for detection, relationship determination, position conversion, merging, clipping, and optional OpenCV display.",
         "type": "summary"
     },
-    "70": {
-        "file_id": 10,
+    "50": {
+        "file_id": 5,
         "content": "from component_detection.lib_ip.Bbox import Bbox\nimport component_detection.lib_ip.ip_draw as draw\nimport cv2\ndef cvt_compos_relative_pos(compos, col_min_base, row_min_base):\n    for compo in compos:\n        compo.compo_relative_position(col_min_base, row_min_base)\ndef compos_containment(compos):\n    for i in range(len(compos) - 1):\n        for j in range(i + 1, len(compos)):\n            relation = compos[i].compo_relation(compos[j])\n            if relation == -1:\n                compos[j].contain.append(i)\n            if relation == 1:\n                compos[i].contain.append(j)\ndef compos_update(compos, org_shape):\n    for i, compo in enumerate(compos):\n        # start from 1, id 0 is background\n        compo.compo_update(i + 1, org_shape)\nclass Component:\n    def __init__(self, region, image_shape):\n        self.id = None\n        self.region = region\n        self.boundary = self.compo_get_boundary()\n        self.bbox = self.compo_get_bbox()\n        self.bbox_area = self.bbox.box_area\n        self.region_area = len(region)",
         "type": "code",
         "location": "/component_detection/lib_ip/Component.py:1-36"
     },
-    "71": {
-        "file_id": 10,
+    "51": {
+        "file_id": 5,
         "content": "The code defines a class \"Component\" and several functions. The class initializes with region and image shape, and calculates its boundary and bounding box. The function \"cvt_compos_relative_pos\" adjusts the position of compositions relative to a base. \"compos_containment\" determines containment relationships between compositions. \"compos_update\" updates component properties based on image shape.",
         "type": "comment"
     },
-    "72": {
-        "file_id": 10,
+    "52": {
+        "file_id": 5,
         "content": "        self.width = len(self.boundary[0])\n        self.height = len(self.boundary[2])\n        self.image_shape = image_shape\n        self.area = self.width * self.height\n        self.category = 'Compo'\n        self.contain = []\n        self.rect_ = None\n        self.line_ = None\n        self.redundant = False\n    def compo_update(self, id, org_shape):\n        self.id = id\n        self.image_shape = org_shape\n        self.width = self.bbox.width\n        self.height = self.bbox.height\n        self.bbox_area = self.bbox.box_area\n        self.area = self.width * self.height\n    def put_bbox(self):\n        return self.bbox.put_bbox()\n    def compo_update_bbox_area(self):\n        self.bbox_area = self.bbox.bbox_cal_area()\n    def compo_get_boundary(self):\n        '''\n        get the bounding boundary of an object(region)\n        boundary: [top, bottom, left, right]\n        -> up, bottom: (column_index, min/max row border)\n        -> left, right: (row_index, min/max column border) detect range of each row\n        '''\n        border_up, border_bottom, border_left, border_right = {}, {}, {}, {}",
         "type": "code",
         "location": "/component_detection/lib_ip/Component.py:37-70"
     },
-    "73": {
-        "file_id": 10,
+    "53": {
+        "file_id": 5,
         "content": "The code defines a class for a component, which has properties like width, height, area, and category. The `compo_update` method updates the component's attributes based on new information. The `put_bbox` method returns the bounding box of the component. The `compo_get_boundary` method retrieves the boundary coordinates for each row in the component.",
         "type": "comment"
     },
-    "74": {
-        "file_id": 10,
+    "54": {
+        "file_id": 5,
         "content": "        for point in self.region:\n            # point: (row_index, column_index)\n            # up, bottom: (column_index, min/max row border) detect range of each column\n            if point[1] not in border_up or border_up[point[1]] > point[0]:\n                border_up[point[1]] = point[0]\n            if point[1] not in border_bottom or border_bottom[point[1]] < point[0]:\n                border_bottom[point[1]] = point[0]\n            # left, right: (row_index, min/max column border) detect range of each row\n            if point[0] not in border_left or border_left[point[0]] > point[1]:\n                border_left[point[0]] = point[1]\n            if point[0] not in border_right or border_right[point[0]] < point[1]:\n                border_right[point[0]] = point[1]\n        boundary = [border_up, border_bottom, border_left, border_right]\n        # descending sort\n        for i in range(len(boundary)):\n            boundary[i] = [[k, boundary[i][k]] for k in boundary[i].keys()]\n            boundary[i] = sorted(boundary[i], key=lambda x: x[0])",
         "type": "code",
         "location": "/component_detection/lib_ip/Component.py:71-88"
     },
-    "75": {
-        "file_id": 10,
+    "55": {
+        "file_id": 5,
         "content": "This code sets the top, bottom, left, and right column borders for each point in the region. The top (border_up) and bottom (border_bottom) borders are updated if a new point has a smaller row index than any existing top border or a larger row index than any existing bottom border. Similarly, the left (border_left) and right (border_right) borders are updated if a new point has a larger column index than any existing left border or a smaller column index than any existing right border. Finally, the boundaries are sorted in descending order for further processing.",
         "type": "comment"
     },
-    "76": {
-        "file_id": 10,
+    "56": {
+        "file_id": 5,
         "content": "        return boundary\n    def compo_get_bbox(self):\n        \"\"\"\n        Get the top left and bottom right points of boundary\n        :param boundaries: boundary: [top, bottom, left, right]\n                            -> up, bottom: (column_index, min/max row border)\n                            -> left, right: (row_index, min/max column border) detect range of each row\n        :return: corners: [(top_left, bottom_right)]\n                            -> top_left: (column_min, row_min)\n                            -> bottom_right: (column_max, row_max)\n        \"\"\"\n        col_min, row_min = (int(min(self.boundary[0][0][0], self.boundary[1][-1][0])), int(min(self.boundary[2][0][0], self.boundary[3][-1][0])))\n        col_max, row_max = (int(max(self.boundary[0][0][0], self.boundary[1][-1][0])), int(max(self.boundary[2][0][0], self.boundary[3][-1][0])))\n        bbox = Bbox(col_min, row_min, col_max, row_max)\n        return bbox\n    def compo_is_rectangle(self, min_rec_evenness, max_dent_ratio, test=False):\n        '''",
         "type": "code",
         "location": "/component_detection/lib_ip/Component.py:89-107"
     },
-    "77": {
-        "file_id": 10,
+    "57": {
+        "file_id": 5,
         "content": "The `Component.py` file contains a class for component detection. The function at lines 88-106, `compo_get_bbox`, calculates the top left and bottom right points of the boundary provided as input, returning a bounding box represented by its top left and bottom right corners. Another function `compo_is_rectangle` checks if the component is a rectangle based on given criteria such as minimum rectangular evenness and maximum dent ratio.",
         "type": "comment"
     },
-    "78": {
-        "file_id": 10,
+    "58": {
+        "file_id": 5,
         "content": "        detect if an object is rectangle by evenness and dent of each border\n        '''\n        dent_direction = [1, -1, 1, -1]  # direction for convex\n        flat = 0\n        parameter = 0\n        for n, border in enumerate(self.boundary):\n            parameter += len(border)\n            # dent detection\n            pit = 0  # length of pit\n            depth = 0  # the degree of surface changing\n            if n <= 1:\n                adj_side = max(len(self.boundary[2]), len(self.boundary[3]))  # get maximum length of adjacent side\n            else:\n                adj_side = max(len(self.boundary[0]), len(self.boundary[1]))\n            # -> up, bottom: (column_index, min/max row border)\n            # -> left, right: (row_index, min/max column border) detect range of each row\n            abnm = 0\n            for i in range(int(3 + len(border) * 0.02), len(border) - 1):\n                # calculate gradient\n                difference = border[i][1] - border[i + 1][1]\n                # the degree of surface changing",
         "type": "code",
         "location": "/component_detection/lib_ip/Component.py:108-130"
     },
-    "79": {
-        "file_id": 10,
+    "59": {
+        "file_id": 5,
         "content": "This code detects if an object is a rectangle by checking the evenness and dent of each border. It iterates through the borders, calculates the gradient and degree of surface changing to determine if it's a convex shape or has dents. It also calculates the maximum length of adjacent sides for comparison.",
         "type": "comment"
     },
-    "80": {
-        "file_id": 10,
+    "60": {
+        "file_id": 5,
         "content": "                depth += difference\n                # ignore noise at the start of each direction\n                if i / len(border) < 0.08 and (dent_direction[n] * difference) / adj_side > 0.5:\n                    depth = 0  # reset\n                # print(border[i][1], i / len(border), depth, (dent_direction[n] * difference) / adj_side)\n                # if the change of the surface is too large, count it as part of abnormal change\n                if abs(depth) / adj_side > 0.3:\n                    abnm += 1  # count the size of the abnm\n                    # if the abnm is too big, the shape should not be a rectangle\n                    if abnm / len(border) > 0.1:\n                        if test:\n                            print('abnms', abnm, abnm / len(border))\n                            draw.draw_boundary([self], self.image_shape, show=True)\n                        self.rect_ = False\n                        return False\n                    continue\n                else:\n                    # reset the abnm if the depth back to normal",
         "type": "code",
         "location": "/component_detection/lib_ip/Component.py:131-149"
     },
-    "81": {
-        "file_id": 10,
+    "61": {
+        "file_id": 5,
         "content": "This code is part of a function that detects components in an image. It checks the depth and abnormality of each side of a potential rectangle to determine if it is actually rectangular or not. If the depth is too large (ignoring noise at the start), it counts as an abnormal change. If the total abnormal count exceeds 10% of the shape's length, it classifies the shape as non-rectangular and returns False. The code continues to the next iteration.",
         "type": "comment"
     },
-    "82": {
-        "file_id": 10,
+    "62": {
+        "file_id": 5,
         "content": "                    abnm = 0\n                # if sunken and the surface changing is large, then counted as pit\n                if dent_direction[n] * depth < 0 and abs(depth) / adj_side > 0.15:\n                    pit += 1\n                    continue\n                # if the surface is not changing to a pit and the gradient is zero, then count it as flat\n                if abs(depth) < 1 + adj_side * 0.015:\n                    flat += 1\n                if test:\n                    print(depth, adj_side, flat)\n            # if the pit is too big, the shape should not be a rectangle\n            if pit / len(border) > max_dent_ratio:\n                if test:\n                    print('pit', pit, pit / len(border))\n                    draw.draw_boundary([self], self.image_shape, show=True)\n                self.rect_ = False\n                return False\n        if test:\n            print(flat / parameter, '\\n')\n            draw.draw_boundary([self], self.image_shape, show=True)\n        # ignore text and irregular shape",
         "type": "code",
         "location": "/component_detection/lib_ip/Component.py:150-172"
     },
-    "83": {
-        "file_id": 10,
+    "63": {
+        "file_id": 5,
         "content": "The code checks if the surface is changing to a pit and classifies it as such. It also counts flat surfaces and ignores irregular shapes or text. If the number of pits exceeds a certain threshold, the shape is not considered rectangular.",
         "type": "comment"
     },
-    "84": {
-        "file_id": 10,
+    "64": {
+        "file_id": 5,
         "content": "        if self.height / self.image_shape[0] > 0.3:\n            min_rec_evenness = 0.85\n        if (flat / parameter) < min_rec_evenness:\n            self.rect_ = False\n            return False\n        self.rect_ = True\n        return True\n    def compo_is_line(self, min_line_thickness):\n        \"\"\"\n        Check this object is line by checking its boundary\n        :param boundary: boundary: [border_top, border_bottom, border_left, border_right]\n                                    -> top, bottom: list of (column_index, min/max row border)\n                                    -> left, right: list of (row_index, min/max column border) detect range of each row\n        :param min_line_thickness:\n        :return: Boolean\n        \"\"\"\n        # horizontally\n        slim = 0\n        for i in range(self.width):\n            if abs(self.boundary[1][i][1] - self.boundary[0][i][1]) <= min_line_thickness:\n                slim += 1\n        if slim / len(self.boundary[0]) > 0.93:\n            self.line_ = True\n            return True",
         "type": "code",
         "location": "/component_detection/lib_ip/Component.py:173-197"
     },
-    "85": {
-        "file_id": 10,
+    "65": {
+        "file_id": 5,
         "content": "This code snippet checks if an object is a line by evaluating its boundary. It first calculates the slimness of the object horizontally and if it exceeds a certain threshold, it identifies the object as a line. The `min_line_thickness` parameter determines how thick a line should be to pass the check. If the slimness threshold is met, the `self.line_` attribute is set to True and the method returns True.",
         "type": "comment"
     },
-    "86": {
-        "file_id": 10,
+    "66": {
+        "file_id": 5,
         "content": "        # vertically\n        slim = 0\n        for i in range(self.height):\n            if abs(self.boundary[2][i][1] - self.boundary[3][i][1]) <= min_line_thickness:\n                slim += 1\n        if slim / len(self.boundary[2]) > 0.93:\n            self.line_ = True\n            return True\n        self.line_ = False\n        return False\n    def compo_relation(self, compo_b, bias=(0, 0)):\n        \"\"\"\n        :return: -1 : a in b\n                 0  : a, b are not intersected\n                 1  : b in a\n                 2  : a, b are identical or intersected\n        \"\"\"\n        return self.bbox.bbox_relation_nms(compo_b.bbox, bias)\n    def compo_relative_position(self, col_min_base, row_min_base):\n        '''\n        Convert to relative position based on base coordinator\n        '''\n        self.bbox.bbox_cvt_relative_position(col_min_base, row_min_base)\n    def compo_merge(self, compo_b):\n        self.bbox = self.bbox.bbox_merge(compo_b.bbox)\n        self.compo_update(self.id, self.image_shape)\n    def compo_clipping(self, img, pad=0, show=False):",
         "type": "code",
         "location": "/component_detection/lib_ip/Component.py:198-228"
     },
-    "87": {
-        "file_id": 10,
+    "67": {
+        "file_id": 5,
         "content": "The code includes methods for detecting if a component is vertically continuous, determining the relationship between two components, converting to relative position based on a base coordinator, merging two components, and clipping an image.",
         "type": "comment"
     },
-    "88": {
-        "file_id": 10,
+    "68": {
+        "file_id": 5,
         "content": "        (column_min, row_min, column_max, row_max) = self.put_bbox()\n        column_min = max(column_min - pad, 0)\n        column_max = min(column_max + pad, img.shape[1])\n        row_min = max(row_min - pad, 0)\n        row_max = min(row_max + pad, img.shape[0])\n        clip = img[row_min:row_max, column_min:column_max]\n        if show:\n            cv2.imshow('clipping', clip)\n            cv2.waitKey()\n        return clip",
         "type": "code",
         "location": "/component_detection/lib_ip/Component.py:229-238"
     },
-    "89": {
-        "file_id": 10,
+    "69": {
+        "file_id": 5,
         "content": "This code adjusts the bounding box coordinates, extracts a clipped image from the original, and optionally displays it using OpenCV.",
         "type": "comment"
     },
-    "90": {
-        "file_id": 11,
+    "70": {
+        "file_id": 6,
         "content": "/component_detection/lib_ip/file_utils.py",
         "type": "filepath"
     },
-    "91": {
-        "file_id": 11,
+    "71": {
+        "file_id": 6,
         "content": "The code defines two functions, `save_corners` and `save_corners_json`, to save detected component coordinates in an image. It imports necessary libraries for image processing and creates separate directories for each component type, storing the extracted information in a JSON file with proper indentation. Additionally, it creates a thumbnail image clip from the original image, saves it as a .png file in a directory, creating the directory if it doesn't already exist using the build_directory function.",
         "type": "summary"
     },
-    "92": {
-        "file_id": 11,
+    "72": {
+        "file_id": 6,
         "content": "import os\nimport pandas as pd\nimport json\nfrom os.path import join as pjoin\nimport time\nimport cv2\ndef save_corners(file_path, corners, compo_name, clear=True):\n    try:\n        df = pd.read_csv(file_path, index_col=0)\n    except:\n        df = pd.DataFrame(columns=['component', 'x_max', 'x_min', 'y_max', 'y_min', 'height', 'width'])\n    if clear:\n        df = df.drop(df.index)\n    for corner in corners:\n        (up_left, bottom_right) = corner\n        c = {'component': compo_name}\n        (c['y_min'], c['x_min']) = up_left\n        (c['y_max'], c['x_max']) = bottom_right\n        c['width'] = c['y_max'] - c['y_min']\n        c['height'] = c['x_max'] - c['x_min']\n        df = df.append(c, True)\n    df.to_csv(file_path)\ndef save_corners_json(file_path, compos):\n    img_shape = compos[0].image_shape\n    output = {'img_shape': img_shape, 'compos': []}\n    f_out = open(file_path, 'w')\n    for compo in compos:\n        c = {'id': compo.id, 'class': compo.category}\n        (c['column_min'], c['row_min'], c['column_max'], c['row_max']) = compo.put_bbox()",
         "type": "code",
         "location": "/component_detection/lib_ip/file_utils.py:1-35"
     },
-    "93": {
-        "file_id": 11,
+    "73": {
+        "file_id": 6,
         "content": "The code defines two functions, `save_corners` and `save_corners_json`, which take a file path as input and save the coordinates of detected components (corners) in the image. The `save_corners` function expects corners to be passed as separate arguments, while `save_corners_json` takes an iterable containing component objects with their respective IDs, classes, and bounding box coordinates. The code also imports several libraries such as os, pandas, json, and cv2 for image processing operations.",
         "type": "comment"
     },
-    "94": {
-        "file_id": 11,
+    "74": {
+        "file_id": 6,
         "content": "        c['width'] = compo.width\n        c['height'] = compo.height\n        output['compos'].append(c)\n    json.dump(output, f_out, indent=4)\ndef save_clipping(org, output_root, corners, compo_classes, compo_index):\n    if not os.path.exists(output_root):\n        os.mkdir(output_root)\n    pad = 2\n    for i in range(len(corners)):\n        compo = compo_classes[i]\n        (up_left, bottom_right) = corners[i]\n        (col_min, row_min) = up_left\n        (col_max, row_max) = bottom_right\n        col_min = max(col_min - pad, 0)\n        col_max = min(col_max + pad, org.shape[1])\n        row_min = max(row_min - pad, 0)\n        row_max = min(row_max + pad, org.shape[0])\n        # if component type already exists, index increase by 1, otherwise add this type\n        compo_path = pjoin(output_root, compo)\n        if compo_classes[i] not in compo_index:\n            compo_index[compo_classes[i]] = 0\n            if not os.path.exists(compo_path):\n                os.mkdir(compo_path)\n        else:\n            compo_index[compo_classes[i]] += 1",
         "type": "code",
         "location": "/component_detection/lib_ip/file_utils.py:36-64"
     },
-    "95": {
-        "file_id": 11,
+    "75": {
+        "file_id": 6,
         "content": "This code saves components detected in an image by extracting their coordinates and storing them in separate directories. It creates a new directory for each component type if it doesn't already exist, and increases the index of existing types. The extracted information is saved to a JSON file with proper indentation.",
         "type": "comment"
     },
-    "96": {
-        "file_id": 11,
+    "76": {
+        "file_id": 6,
         "content": "        clip = org[row_min:row_max, col_min:col_max]\n        cv2.imwrite(pjoin(compo_path, str(compo_index[compo_classes[i]]) + '.png'), clip)\ndef build_directory(directory):\n    if not os.path.exists(directory):\n        os.mkdir(directory)\n    return directory",
         "type": "code",
         "location": "/component_detection/lib_ip/file_utils.py:65-72"
     },
-    "97": {
-        "file_id": 11,
+    "77": {
+        "file_id": 6,
         "content": "The code is creating a thumbnail image clip from the original image and saving it as a .png file in a directory. The directory is created if it doesn't already exist using the build_directory function, which takes an input directory path and creates it if necessary.",
         "type": "comment"
     },
-    "98": {
-        "file_id": 12,
+    "78": {
+        "file_id": 7,
         "content": "/component_detection/lib_ip/ip_detection.py",
         "type": "filepath"
     },
-    "99": {
-        "file_id": 12,
+    "79": {
+        "file_id": 7,
         "content": "The functions merge and remove components in binary images based on distance, height thresholds, and line orientation to generate a new list of compositions. The code detects and filters components using flood fill algorithm, categorizing them as blocks based on conditions such as size, area, shape, and type, and displays boundary information if `test` is set while saving the \"broad\" image if specified path is provided before returning the \"compos\" image.",
         "type": "summary"
+    },
+    "80": {
+        "file_id": 7,
+        "content": "import cv2\nimport numpy as np\nimport component_detection.lib_ip.ip_draw as draw\nimport component_detection.lib_ip.ip_preprocessing as pre\nfrom component_detection.lib_ip.Component import Component\nimport component_detection.lib_ip.Component as Compo\nfrom config.CONFIG_ZEXUI import Config\nC = Config()\ndef merge_intersected_corner(compos, org, is_merge_contained_ele, max_gap=(0, 0), max_ele_height=25):\n    '''\n    Merge compos that intersect or are close to each other into one component.\n    :param compos: list of Component objects\n    :param org: original image\n    :param is_merge_contained_ele: if True, merge compos nested in others\n    :param max_gap: (horizontal_distance, vertical_distance) to be merge into one line/column\n    :param max_ele_height: if higher than it, recognize the compo as text\n    :return: list of Component objects\n    '''\n    # Check if any compos have been merged\n    changed = False\n    # Create a new list for merged compos\n    new_compos = []\n    # Update the dimensions of each compo\n    Compo.compos_update(compos, org.shape)",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:1-28"
+    },
+    "81": {
+        "file_id": 7,
+        "content": "This function merges intersecting or close components into one by checking if any compos have been merged and updating the dimensions of each compo. It takes a list of Component objects, original image, is_merge_contained_ele parameter, max_gap distance, and max_ele_height as parameters and returns a new list of Component objects.",
+        "type": "comment"
+    },
+    "82": {
+        "file_id": 7,
+        "content": "    # Loop through each compo\n    for i in range(len(compos)):\n        merged = False\n        cur_compo = compos[i]\n        # Loop through each merged compo\n        for j in range(len(new_compos)):\n            # Get the relation between compo[i] and compo[j]\n            relation = cur_compo.compo_relation(new_compos[j], max_gap)\n            # Merge compo[i] to compo[j] if:\n            # 1. compo[j] contains compo[i]\n            # 2. compo[j] intersects with compo[i] with certain intersection over union (iou)\n            # 3. is_merge_contained_ele is True and compo[j] is contained in compo[i]\n            if relation == 1 or relation == 2 or (is_merge_contained_ele and relation == -1):\n                new_compos[j].compo_merge(cur_compo)\n                cur_compo = new_compos[j]\n                merged = True\n                changed = True\n        # Append the unmerged compo to new_compos\n        if not merged:\n            new_compos.append(compos[i])\n    # If no compos have been merged, return the original list of compos",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:30-53"
+    },
+    "83": {
+        "file_id": 7,
+        "content": "The code iterates through compos and new_compos, checking their relations and merging or appending them based on certain conditions. If a compo is merged, the change is noted. The function returns the updated list of new_compos if any were merged, otherwise it returns the original list of compos.",
+        "type": "comment"
+    },
+    "84": {
+        "file_id": 7,
+        "content": "    if not changed:\n        return compos\n    # Otherwise, call the function recursively on the new_compos list until no more compos can be merged\n    else:\n        return merge_intersected_corner(new_compos, org, is_merge_contained_ele, max_gap, max_ele_height)\ndef merge_intersected_compos(compos):\n    '''\n    Merge intersected components in a list of components.\n    :param compos: a list of Component objects\n    :return: a new list of Component objects\n    '''\n    changed = True\n    while changed:\n        changed = False\n        temp_set = []\n        for compo_a in compos:\n            merged = False\n            for compo_b in temp_set:\n                if compo_a.compo_relation(compo_b) == 2:\n                    compo_b.compo_merge(compo_a)\n                    merged = True\n                    changed = True\n                    break\n            if not merged:\n                temp_set.append(compo_a)\n        compos = temp_set.copy()\n    return compos\ndef compo_relation(compo_a, compo_b):\n    '''\n    Check the relation between two components.",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:54-87"
+    },
+    "85": {
+        "file_id": 7,
+        "content": "This code contains a function that merges intersected components in a list of components. It repeatedly checks for intersections between each component and those already merged, marking them as \"merged\" if found. The process continues until no more merging can be performed.",
+        "type": "comment"
+    },
+    "86": {
+        "file_id": 7,
+        "content": "    :param compo_a: a Component object\n    :param compo_b: a Component object\n    :return: an integer indicating the relation: 0 for no intersection, 1 for compo_b contains compo_a,\n             2 for compo_a intersects compo_b, and -1 for compo_a contains compo_b\n    '''\n    relation = 0\n    if compo_b.contains(compo_a):\n        relation = 1\n    elif compo_a.intersects(compo_b):\n        iou = compo_a.intersection_over_union(compo_b)\n        if iou >= 0.5:\n            relation = 2\n    elif compo_a.contains(compo_b):\n        relation = -1\n    return relation\ndef contains(compo_a, compo_b):\n    '''\n    Check if a component contains another component.\n    :param compo_a: a Component object\n    :param compo_b: a Component object\n    :return: a boolean indicating if compo_a contains compo_b\n    '''\n    return compo_a.bounding_box.contains(compo_b.bounding_box)\ndef intersects(compo_a, compo_b):\n    '''\n    Check if a component intersects another component.\n    :param compo_a: a Component object\n    :param compo_b: a Component object",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:89-120"
+    },
+    "87": {
+        "file_id": 7,
+        "content": "The function detects the relation between two components, whether one contains or intersects the other. It also checks if a component contains another or intersects with it. The code includes functions to determine if one component contains or intersects with another by checking their bounding boxes.",
+        "type": "comment"
+    },
+    "88": {
+        "file_id": 7,
+        "content": "    :return: a boolean indicating if compo_a intersects compo_b\n    '''\n    return compo_a.bounding_box.intersects(compo_b.bounding_box)\ndef intersection_over_union(compo_a, compo_b):\n    '''\n    Calculate the intersection over union (IOU) between two components.\n    :param compo_a: a Component object\n    :param compo_b: a Component object\n    :return: a float representing the IOU between compo_a and compo_b\n    '''\n    intersection = compo_a.bounding_box.intersection(compo_b.bounding_box)\n    union = compo_a.bounding_box.union(compo_b.bounding_box)\n    iou = intersection.area / union.area\n    return iou\ndef compo_merge(compo_a, compo_b):\n    '''\n    Merge two components.\n    :param compo_a: a Component object\n    :param compo_b: a Component object\n    :return: None\n    '''\n    new_bbox = compo_a.bounding_box.union(compo_b.bounding_box)\n    new_compo = Component(new_bbox)\n    new_compo.children = compo_a.children + compo_b.children\n    compo_a.children = []\n    compo_b.children = []\n    return new_compo\ndef remove_contained_non_block_components(compos):",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:121-154"
+    },
+    "89": {
+        "file_id": 7,
+        "content": "The code contains several functions for component detection and manipulation. The `intersection_over_union` function calculates the intersection over union between two components, while `compo_merge` merges two components into one by combining their bounding boxes and children. The `remove_contained_non_block_components` function removes non-block contained components from a list of components.",
+        "type": "comment"
+    },
+    "90": {
+        "file_id": 7,
+        "content": "    '''\n    Remove components that are contained by others and not of 'Block' category\n    '''\n    marked = np.full(len(compos), False)\n    mark_contained_non_block_components(compos, marked)\n    return get_unmarked_components(compos, marked)\ndef mark_contained_non_block_components(compos, marked):\n    '''\n    Mark contained non-block components\n    '''\n    for i in range(len(compos) - 1):\n        for j in range(i + 1, len(compos)):\n            relation = compos[i].compo_relation(compos[j])\n            if relation == -1 and compos[j].category != 'Block':\n                marked[i] = True\n            if relation == 1 and compos[i].category != 'Block':\n                marked[j] = True\ndef get_unmarked_components(compos, marked):\n    '''\n    Get unmarked components\n    '''\n    new_compos = []\n    for i in range(len(marked)):\n        if not marked[i]:\n            new_compos.append(compos[i])\n    return new_compos\ndef merge_text(compos, org_shape, max_word_gad=4, max_word_height=20):\n    def is_text(compo):\n        \"\"\"\n        Check if the component is text based on its height and category.",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:155-190"
+    },
+    "91": {
+        "file_id": 7,
+        "content": "This code removes contained non-block components, gets unmarked components, and merges text-based components. It works by iterating over each component in a list, marking those that are contained or not of 'Block' category, then returning only the unmarked components. A separate function is provided to merge text components based on their height and category.",
+        "type": "comment"
+    },
+    "92": {
+        "file_id": 7,
+        "content": "        Args:\n            compo: a component\n        Returns:\n            True if the component is text, False otherwise.\n        \"\"\"\n        height = compo.height\n        # ignore non-text\n        # if height / row > max_word_height_ratio\\\n        #         or compos[i].category != 'Text':\n        if height > max_word_height:\n            return False\n        else:\n            return True\n    def is_same_line(compo_a, compo_b):\n        \"\"\"\n        Check if two components are on the same line based on their bounding boxes.\n        Args:\n            compo_a: a component\n            compo_b: a component\n        Returns:\n            True if the two components are on the same line, False otherwise.\n        \"\"\"\n        (col_min_a, row_min_a, col_max_a, row_max_a) = compo_a.put_bbox()\n        (col_min_b, row_min_b, col_max_b, row_max_b) = compo_b.put_bbox()\n        col_min_s = max(col_min_a, col_min_b)\n        col_max_s = min(col_max_a, col_max_b)\n        row_min_s = max(row_min_a, row_min_b)\n        row_max_s = min(row_max_a, row_max_b)",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:192-224"
+    },
+    "93": {
+        "file_id": 7,
+        "content": "The code detects if a component is text based on its height and category. If it's not a text, it returns False. The is_same_line function checks if two components are on the same line by comparing their bounding boxes. It considers the minimum and maximum column and row values of each component to determine if they overlap, indicating they are on the same line.",
+        "type": "comment"
+    },
+    "94": {
+        "file_id": 7,
+        "content": "        # on the same line\n        # if abs(row_min_a - row_min_b) < max_word_gad and abs(row_max_a - row_max_b) < max_word_gad:\n        if row_min_s < row_max_s:\n            # close distance\n            if col_min_s < col_max_s or \\\n                    (0 < col_min_b - col_max_a < max_word_gad) or (0 < col_min_a - col_max_b < max_word_gad):\n                return True\n        return False\n    def merge_components(compo_a, compo_b):\n        \"\"\"\n        Merge two components into a new one.\n        Args:\n            compo_a: a component\n            compo_b: a component\n        Returns:\n            A new component that is the merger of the two input components.\n        \"\"\"\n        new_compo = compo_a.compo_copy()\n        new_compo.compo_merge(compo_b)\n        return new_compo\n    def merge_text_recursive(compos):\n        \"\"\"\n        Recursive function that merges text components until no more mergers can be made.\n        Args:\n            compos: a list of components\n        Returns:\n            A new list of merged components.",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:226-258"
+    },
+    "95": {
+        "file_id": 7,
+        "content": "The code contains a function that checks if two components are close in position and returns True or False accordingly. It also includes a function to merge two components into a new one, which is used in another recursive function that merges text components until no more mergers can be made.",
+        "type": "comment"
+    },
+    "96": {
+        "file_id": 7,
+        "content": "        \"\"\"\n        changed = False\n        new_compos = []\n        for i in range(len(compos)):\n            merged = False\n            if not is_text(compos[i]):\n                new_compos.append(compos[i])\n                continue\n            for j in range(len(new_compos)):\n                if not is_text(new_compos[j]):\n                    continue\n                if is_same_line(compos[i], new_compos[j]):\n                    merged_compo = merge_components(compos[i], new_compos[j])\n                    new_compos[j] = merged_compo\n                    merged = True\n                    changed = True\n                    break\n            if not merged:\n                new_compos.append(compos[i])\n        if not changed:\n            return new_compos\n        else:\n            return merge_text_recursive(new_compos)\n    return merge_text_recursive(compos)\ndef rm_top_or_bottom_corners(components, org_shape, top_bottom_height=C.THRESHOLD_TOP_BOTTOM_BAR):\n    new_compos = []\n    height, width = org_shape[:2]\n    for compo in components:",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:259-291"
+    },
+    "97": {
+        "file_id": 7,
+        "content": "This function takes a list of components and checks if any are text or on the same line. It merges similar components and returns a new list of components, recursively applying this process. If no changes were made, it simply returns the original list. The function also includes code to remove top or bottom corners from the component list based on the specified height threshold.",
+        "type": "comment"
+    },
+    "98": {
+        "file_id": 7,
+        "content": "        (column_min, row_min, column_max, row_max) = compo.put_bbox()\n        # remove big ones\n        # if (row_max - row_min) / height > 0.65 and (column_max - column_min) / width > 0.8:\n        #     continue\n        if not (row_max < height * top_bottom_height[0] or row_min > height * top_bottom_height[1]):\n            new_compos.append(compo)\n    return new_compos\ndef rm_line_v_h(binary, show=False, max_line_thickness=C.THRESHOLD_LINE_THICKNESS):\n    def check_continuous_line(line, edge):\n        continuous_length = 0\n        line_start = -1\n        for j, p in enumerate(line):\n            if p > 0:\n                if line_start == -1:\n                    line_start = j\n                continuous_length += 1\n            elif continuous_length > 0:\n                if continuous_length / edge > 0.6:\n                    return [line_start, j]\n                continuous_length = 0\n                line_start = -1\n        if continuous_length / edge > 0.6:\n            return [line_start, len(line)]\n        else:",
+        "type": "code",
+        "location": "/component_detection/lib_ip/ip_detection.py:292-318"
+    },
+    "99": {
+        "file_id": 7,
+        "content": "The function `rm_line_v_h` checks for continuous lines in the binary image. It returns the indices of any line that exceeds a certain length threshold (0.6 times the edge length). The function `put_bbox` of the `compo` object determines the bounding box of a component. Components that are too large are skipped, and the function `check_continuous_line` is used to check for continuous lines in vertical or horizontal directions.",
+        "type": "comment"
     }
 }
